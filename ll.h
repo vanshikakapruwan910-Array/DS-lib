@@ -1,0 +1,11 @@
+struct Node* makeNode(int data);
+void displayLL(struct Node* head);
+void insertAtBegin(struct Node** head, int data);
+void insertAtEnd(struct Node** head, int data);
+void insertBeforeK(struct Node** head, int data, int k);
+//void insertAfterK(struct Node** head, int data, int k);
+void insertAtI(struct Node** head, int data, int pos);
+void deleteAtBegin(struct Node** head);
+void deleteAtEnd(struct Node** head);
+void deleteAtI(struct Node** head, int pos);
+int operateLL();
