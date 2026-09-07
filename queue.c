@@ -97,7 +97,7 @@ void print(struct queue *q)
     printf("%d\n",q->arr[i]);
     printf("\n");
 }
-int main()
+int operateQueue()
 {
     struct queue *q=newqueue(5);
     int ch,data;

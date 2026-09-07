@@ -5,7 +5,7 @@ int pop(int[],int);
 void peek(int[],int);
 void display(int[],int);
 
-int main(){
+int operateStack(){
     int s[max],top = -1,ch;
     do{
         printf("----------Enter a choice----------\n ~~~~~1.Push~~~~~\n~~~~~2.Pop~~~~~\n~~~~~3.Peek~~~~~\n~~~~~4.Display~~~~~\n");

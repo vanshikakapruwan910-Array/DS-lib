@@ -156,7 +156,7 @@ void deleteAtI(struct Node** head, int pos){
     temp->next = next;
 }
 
-int main(){
+int operateLL(){
     int c,d,k;
     struct Node *a=NULL;
     do{
@@ -208,4 +208,5 @@ int main(){
                 printf("Invalid Input");
         }
     }while(c!=-1);
+    return 0;
 }

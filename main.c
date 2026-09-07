@@ -1,5 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "array.h"
+#include "ll.h"
+#include "stack.h"
+#include "queue.h"
 
 int main(){
     int c;
