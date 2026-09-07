@@ -64,28 +64,23 @@ void insertBeforeK(struct Node** head, int data, int k){
     temp->next=new;
 }
 
-/*void insertAfterK(struct Node** head, int data, int k){
+void insertAfterK(struct Node** head, int data, int k){
     struct Node* new=makeNode(data);
     if (*head==NULL){
         *head=new;
         return;
     }
-    if((*head)->data==k){
-        new->next=*head;
-        *head=new;
-        return;
-    }
     struct Node* temp=*head;
-    while(temp->next!=NULL && temp->next->data != k){
+    while(temp != NULL && temp->data != k)
         temp=temp->next;
-    }
-    if(temp->next==NULL){
+
+    if(temp==NULL){
         free(new);
         return;
     }
     new->next=temp->next;
     temp->next=new;
-}*/
+}
 
 void insertAtI(struct Node** head, int data, int pos){
     struct Node* new=makeNode(data);
@@ -156,56 +151,126 @@ void deleteAtI(struct Node** head, int pos){
     temp->next = next;
 }
 
+void deleteValueK(struct Node** head, int k){
+    if(*head==NULL){
+        printf("Empty linked list.\n");
+        return;
+    }
+    struct Node* temp=*head;
+    if(temp->data==k){
+        *head=temp->next;
+        free(temp);
+        return;
+    }
+
+    while(temp->next!=NULL && temp->next->data!=k){
+        temp=temp->next;
+    }
+    if(temp->next==NULL){
+        printf("Value not found.\n");
+        return;
+    }
+    struct Node* toDelete = temp->next;
+    temp->next = toDelete->next;
+    free(toDelete);
+}
+
+void searchLL(struct Node* head, int data){
+    struct Node* temp=head;
+    int i=0,f=0;
+    while(temp!=NULL){
+        if(temp->data){
+            printf("Found at index %d.\n",i);
+            f=1;
+        }
+        temp=temp->next;
+        i++;
+    }
+    if(!f)
+        printf("Given value not found in linked list.\n");
+    
+}
+
+void lengthLL(struct Node* head){
+    struct Node* temp=head;
+    int c=0;
+    while(temp!=NULL){
+        c++;
+        temp=temp->next;
+    }
+    printf("Length of linked list: %d\n",c);
+}
+
 int operateLL(){
     int c,d,k;
     struct Node *a=NULL;
     do{
-        printf("Enter 0 to display LL, 1 to insert at begin, 2 to insert at end, 3 to insert before k, 4 to inser after k, 5 to insert at i, 6 to delete at begin, 7 to delete at end, 8 to delete at i, -1 to exit.");
+        printf("Enter: 0 to display LL\n1 to insert at begin\n2 to insert at end\n3 to insert before k\n4 to inser after k\n5 to insert at i\n6 to delete at begin\n7 to delete at end\n8 to delete at i\n9 to delete node having value k\n10 to search the linked list for a value\n11 to find the length of the linked list\n-1 to exit.\n");
         scanf("%d",&c);
         switch(c){
             case 0:
                 displayLL(a);
                 break;
             case 1:
-                printf("Enter data to insert.");
+                printf("Enter data to insert.\n");
                 scanf("%d",&d);
                 insertAtBegin(&a,d);
+                printf("Element inserted.\n");
                 break;
             case 2:
-                printf("Enter data to insert.");
+                printf("Enter data to insert.\n");
                 scanf("%d",&d);
                 insertAtEnd(&a,d);
+                printf("Element inserted.\n");
                 break;
             case 3:
-                printf("Enter data to insert and k.");
+                printf("Enter data to insert and k.\n");
                 scanf("%d %d",&d,&k);
                 insertBeforeK(&a,d,k);
+                printf("Element inserted.\n");
                 break;
             case 4:
-                /*printf("Enter data to insert and k.");
+                printf("Enter data to insert and k.\n");
                 scanf("%d %d",&d,&k);
                 insertAfterK(&a,d,k);
-                break;*/
+                printf("Element inserted.\n");
+                break;
             case 5:
-                printf("Enter data to insert and i.");
+                printf("Enter data to insert and i.\n");
                 scanf("%d %d",&d,&k);
                 insertAtI(&a,d,k);
+                printf("Element inserted.\n");
                 break;
             case 6:
                 deleteAtBegin(&a);
-                printf("Element deleted.");
+                printf("Element deleted.\n");
                 break;
             case 7:
                 deleteAtEnd(&a);
-                printf("Element deleted.");
+                printf("Element deleted.\n");
                 break;
             case 8:
                 printf("Enter i.");
                 scanf("%d",&k);
                 deleteAtI(&a,k);
+                printf("Element deleted.\n");
+                break;
+            case 9:
+                printf("Enter k.\n");
+                scanf("%d",&k);
+                deleteValueK(&a,k);
+                printf("Element deleted.\n");
+                break;
+            case 10:
+                printf("Enter value to find.\n");
+                scanf("%d",&k);
+                searchLL(a,k);
+                break;
+            case 11:
+                lengthLL(a);
                 break;
             default:
-                printf("Invalid Input");
+                printf("Invalid Input\n");
         }
     }while(c!=-1);
     return 0;
