@@ -1,6 +1,7 @@
 #include<stdio.h> 
 #include<stdlib.h> 
 #include<limits.h>  
+#include"queue.h"
 struct queue
 {
     int *arr,front,rear;
@@ -141,4 +142,8 @@ int operateQueue()
             printf("invalid choice");
         }
     }
+}
+int main()
+{
+    return operateQueue();
 }
