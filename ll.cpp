@@ -1,5 +1,5 @@
-#include <stdio.h>
-#include <stdlib.h>
+#include <iostream>
+#include <cstdlib.h>
 
 struct Node{
     int data;
@@ -22,13 +22,13 @@ void displayLL(struct Node* head){
     printf("NULL\n");
 }
 
-void insertAtBegin(struct Node** head, int data){
+void insertAtBeginLL(struct Node** head, int data){
     struct Node* new=makeNode(data);
     new->next=*head;
     *head=new;
 }
 
-void insertAtEnd(struct Node** head, int data){
+void insertAtEndLL(struct Node** head, int data){
     struct Node* new=makeNode(data);
     if (*head==NULL){
         *head=new;
@@ -41,7 +41,7 @@ void insertAtEnd(struct Node** head, int data){
     temp->next=new;
 }
 
-void insertBeforeK(struct Node** head, int data, int k){
+void insertBeforeKLL(struct Node** head, int data, int k){
     struct Node* new=makeNode(data);
     if (*head==NULL){
         *head=new;
@@ -64,7 +64,7 @@ void insertBeforeK(struct Node** head, int data, int k){
     temp->next=new;
 }
 
-void insertAfterK(struct Node** head, int data, int k){
+void insertAfterKLL(struct Node** head, int data, int k){
     struct Node* new=makeNode(data);
     if (*head==NULL){
         *head=new;
@@ -82,7 +82,7 @@ void insertAfterK(struct Node** head, int data, int k){
     temp->next=new;
 }
 
-void insertAtI(struct Node** head, int data, int pos){
+void insertAtILL(struct Node** head, int data, int pos){
     struct Node* new=makeNode(data);
     if (pos==0){
         insertAtBegin(head,data);
@@ -101,7 +101,7 @@ void insertAtI(struct Node** head, int data, int pos){
     temp->next = new;
 }
 
-void deleteAtBegin(struct Node** head){
+void deleteAtBeginLL(struct Node** head){
     if(*head==NULL){
         printf("Empty linked list.\n");
         return;
@@ -111,7 +111,7 @@ void deleteAtBegin(struct Node** head){
     free(temp);
 }
 
-void deleteAtEnd(struct Node** head){
+void deleteAtEndLL(struct Node** head){
     if (*head==NULL){
         printf("Empty linked list.\n");
         return;
@@ -129,7 +129,7 @@ void deleteAtEnd(struct Node** head){
     temp->next=NULL;
 }
 
-void deleteAtI(struct Node** head, int pos){
+void deleteAtILL(struct Node** head, int pos){
     if(*head==NULL){
         printf("Empty linked list.\n");
         return;
@@ -151,7 +151,7 @@ void deleteAtI(struct Node** head, int pos){
     temp->next = next;
 }
 
-void deleteValueK(struct Node** head, int k){
+void deleteValueKLL(struct Node** head, int k){
     if(*head==NULL){
         printf("Empty linked list.\n");
         return;
@@ -213,57 +213,57 @@ int operateLL(){
                 break;
             case 1:
                 printf("Enter data to insert.\n");
-                scanf("%d",&d);
-                insertAtBegin(&a,d);
+                cin >> d;
+                insertAtBeginLL(&a,d);
                 printf("Element inserted.\n");
                 break;
             case 2:
                 printf("Enter data to insert.\n");
-                scanf("%d",&d);
-                insertAtEnd(&a,d);
+                cin >> d;
+                insertAtEndLL(&a,d);
                 printf("Element inserted.\n");
                 break;
             case 3:
                 printf("Enter data to insert and k.\n");
-                scanf("%d %d",&d,&k);
-                insertBeforeK(&a,d,k);
+                cin >> d >> k;
+                insertBeforeKLL(&a,d,k);
                 printf("Element inserted.\n");
                 break;
             case 4:
                 printf("Enter data to insert and k.\n");
-                scanf("%d %d",&d,&k);
-                insertAfterK(&a,d,k);
+                cin >> d >> k;
+                insertAfterKLL(&a,d,k);
                 printf("Element inserted.\n");
                 break;
             case 5:
                 printf("Enter data to insert and i.\n");
-                scanf("%d %d",&d,&k);
-                insertAtI(&a,d,k);
+                cin >> d >> k;
+                insertAtILL(&a,d,k);
                 printf("Element inserted.\n");
                 break;
             case 6:
-                deleteAtBegin(&a);
+                deleteAtBeginLL(&a);
                 printf("Element deleted.\n");
                 break;
             case 7:
-                deleteAtEnd(&a);
+                deleteAtEndLL(&a);
                 printf("Element deleted.\n");
                 break;
             case 8:
                 printf("Enter i.");
-                scanf("%d",&k);
-                deleteAtI(&a,k);
+                cin >> k;
+                deleteAtILL(&a,k);
                 printf("Element deleted.\n");
                 break;
             case 9:
                 printf("Enter k.\n");
-                scanf("%d",&k);
-                deleteValueK(&a,k);
+                cin >> k;
+                deleteValueKLL(&a,k);
                 printf("Element deleted.\n");
                 break;
             case 10:
                 printf("Enter value to find.\n");
-                scanf("%d",&k);
+                cin >> k;
                 searchLL(a,k);
                 break;
             case 11:
