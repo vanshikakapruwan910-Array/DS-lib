@@ -1,5 +1,5 @@
 #include <iostream>
-#include <cstdlib.h>
+#include <cstdlib>
 
 struct Node{
     int data;
