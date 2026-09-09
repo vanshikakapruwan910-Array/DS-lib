@@ -10,7 +10,7 @@ int operateStack(){
     int s[max],top = -1,ch;
     do{
         cout<<"----------Enter a choice----------"<<endl;
-        cout<<"~~~~~1.Push~~~~~"<<"~~~~~2.Pop~~~~~"<<"~~~~~3.Peek~~~~~"<<"~~~~~4.Display~~~~~"<<"~~~~~5.Exit~~~~~"<<endl;
+        cout<<"~~~~~1.Push~~~~~"<<endl<<"~~~~~2.Pop~~~~~"<<endl<<"~~~~~3.Peek~~~~~"<<endl<<"~~~~~4.Display~~~~~"<<endl<<"~~~~~5.Exit~~~~~"<<endl;
         cin>>ch;
         switch(ch)
         {
