@@ -1,4 +1,5 @@
-#include<stdio.h>
+#include<iostream>
+using namespace std;
 #define max 10
 int push(int[],int);
 int pop(int[],int);
@@ -8,8 +9,9 @@ void display(int[],int);
 int operateStack(){
     int s[max],top = -1,ch;
     do{
-        printf("----------Enter a choice----------\n ~~~~~1.Push~~~~~\n~~~~~2.Pop~~~~~\n~~~~~3.Peek~~~~~\n~~~~~4.Display~~~~~\n");
-        scanf("%d", &ch);
+        cout<<"----------Enter a choice----------"<<endl;
+        cout<<"~~~~~1.Push~~~~~"<<"~~~~~2.Pop~~~~~"<<"~~~~~3.Peek~~~~~"<<"~~~~~4.Display~~~~~"<<"~~~~~5.Exit~~~~~"<<endl;
+        cin>>ch;
         switch(ch)
         {
             case 1:
@@ -24,8 +26,12 @@ int operateStack(){
             case 4:
             display(s,top);
             break; 
+            case 5:
+            exit(0);
+            default:
+            printf("Invalid Input~~~~~TRY AGAIN!!!!!");
         }
-    }while(ch<=4);
+    }while(ch<=5);
 }
 
 int push(int s[],int top)
@@ -33,11 +39,11 @@ int push(int s[],int top)
     int x;
     if(top== max-1)
     {
-        printf("----------Stack is overflow----------\n");
+        cout<<"----------Stack is overflow----------"<<endl;
     }
     else{
-        printf("~~~~~~Enter the value~~~~~~\n");
-        scanf("%d", &x);
+        cout<<"~~~~~~Enter the value~~~~~~"<<endl;
+        cin>>x;
         top++;
         s[top] = x;
     }
@@ -48,11 +54,11 @@ int pop(int s[], int top)
 {
     if(top == -1)
     {
-        printf("----------Stack is underflow----------\n");
+        cout<<"----------Stack is underflow----------";
         return top;
     }
     else{
-        printf("The poppped element is%d\n", s[top]);
+        cout<<"The poppped element is: "<< s[top];
         top--;
     }
       return top;
@@ -63,10 +69,10 @@ void peek(int s[],int top)
 {
     if(top == -1)
     {
-        printf("----------Stack is underflow----------\n");
+        cout<<"----------Stack is underflow----------";
     }   
     else{
-        printf("~~~~~The top element of the stack is~~~~~~%d\n", s[top]);
+        cout<<"~~~~~The top element of the stack is~~~~~~"<< s[top];
        
     }
      return;
@@ -78,15 +84,15 @@ void display(int s[],int top)
     int i;
     if(top == -1)
     {
-        printf("----------Stack is underflow----------\n");
+        cout<<"----------Stack is underflow----------"<<endl;
     }  
     else{
-        printf("~~~~~~~~~Elements in the stack~~~~~~~~\n");
+        cout<<"~~~~~~~~~Elements in the stack~~~~~~~~"<<endl;
         for(i = top;i>=0;i--)
         {
-            printf("%d",s[top]);
+            cout<<s[i]<<" ";
         }
-        printf("\n");
+        cout<<endl;
     }    
     return;
 }
