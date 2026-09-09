@@ -161,7 +161,3 @@ int main()
 {
     return operateQueue();
 }
-int main()
-{
-    return operateQueue();
-}
