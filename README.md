@@ -17,6 +17,7 @@ and domain-specific abstractions for real-world applications.
 ## Project Structure
 
 include/   → Public headers
+
 src/       → Implementations
 examples/  → Usage examples
 tests/     → Tests
