@@ -19,8 +19,11 @@ and domain-specific abstractions for real-world applications.
 include/   → Public headers
 
 src/       → Implementations
+
 examples/  → Usage examples
+
 tests/     → Tests
+
 docs/      → Documentation
 
 ## Getting Started
