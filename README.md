@@ -39,8 +39,11 @@ Include the required header:
 ## Team
 
 Hrishika Karki
+
 Anmol Panwar
+
 Ayushi Raturi
+
 Vanshika Kapruwan
 
 ## Roadmap
