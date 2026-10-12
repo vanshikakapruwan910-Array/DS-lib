@@ -82,6 +82,39 @@ void deque(queue *q)
     q->front = (q->front + 1) % q->_size;
 }
 
+void sortqueue(queue *q)
+{
+    if (isempty(q))
+    {
+        cout << "Queue is empty\n";
+        return;
+    }
+
+    int n = (q->rear - q->front + q->_size)
+            % q->_size + 1;
+
+    int temp;
+
+    for (int i = 0; i < n - 1; i++)
+    {
+        for (int j = 0; j < n - i - 1; j++)
+        {
+            int pos1 = (q->front + j) % q->_size;
+            int pos2 = (q->front + j + 1) % q->_size;
+
+            if (q->arr[pos1] > q->arr[pos2])
+            {
+                temp = q->arr[pos1];
+                q->arr[pos1] = q->arr[pos2];
+                q->arr[pos2] = temp;
+            }
+        }
+    }
+
+    cout << "Queue sorted successfully\n";
+}
+
+
 void print(queue *q)
 {
     if (isempty(q))
@@ -118,8 +151,9 @@ int operateQueue()
         cout << "1. Enqueue\n";
         cout << "2. Dequeue\n";
         cout << "3. Front\n";
-        cout << "4. Print Queue\n";
-        cout << "5. Exit\n";
+        cout << "4. Sort queue\n";
+        cout << "5. Print Queue\n";
+        cout << "6. Exit\n";
 
         cout << "Enter your choice: ";
         cin >> ch;
@@ -139,12 +173,16 @@ int operateQueue()
             case 3:
                 front(q);
                 break;
-
+            
             case 4:
-                print(q);
+                sortqueue(q);
                 break;
 
             case 5:
+                print(q);
+                break;
+
+            case 6:
                 delete[] q->arr;
                 delete q;
 
