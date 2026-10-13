@@ -2,190 +2,165 @@
 #include <climits>
 using namespace std;
 
-struct queue
+class Queue
 {
     int *arr;
     int front, rear;
     size_t _size;
-};
 
-queue* newqueue(size_t _size)
-{
-    queue *temp = new queue;
-
-    if (temp == nullptr)
-        return nullptr;
-
-    temp->arr = new int[_size];
-
-    temp->_size = _size;
-    temp->front = temp->rear = -1;
-
-    return temp;
-}
-
-int isfull(queue *q)
-{
-    return (q->rear + 1) % q->_size == q->front;
-}
-
-int isempty(queue *q)
-{
-    return (q->rear == -1);
-}
-
-int front(queue *q)
-{
-    if (isempty(q))
+public:
+    Queue(size_t s)
     {
-        cout << "Queue underflow\n";
-        return INT_MIN;
+        _size = s;
+        arr = new int[_size];
+        front = rear = -1;
     }
 
-    cout << q->arr[q->front] << endl;
-    return q->arr[q->front];
-}
-
-void enque(queue *q, int data)
-{
-    if (isfull(q))
+    bool isfull()
     {
-        cout << "Queue overflow\n";
-        return;
+        return (rear + 1) % _size == front;
     }
 
-    if (isempty(q))
+    bool isempty()
     {
-        q->front = q->rear = 0;
-        q->arr[q->rear] = data;
-        return;
+        return rear == -1;
     }
 
-    q->rear = (q->rear + 1) % q->_size;
-    q->arr[q->rear] = data;
-}
-
-void deque(queue *q)
-{
-    if (isempty(q))
+    int getfront()
     {
-        cout << "Queue underflow\n";
-        return;
-    }
-
-    if (q->rear == q->front)
-    {
-        q->front = q->rear = -1;
-        return;
-    }
-
-    q->front = (q->front + 1) % q->_size;
-}
-
-void sortqueue(queue *q)
-{
-    if (isempty(q))
-    {
-        cout << "Queue is empty\n";
-        return;
-    }
-
-    int n = (q->rear - q->front + q->_size)
-            % q->_size + 1;
-
-    int temp;
-
-    for (int i = 0; i < n - 1; i++)
-    {
-        for (int j = 0; j < n - i - 1; j++)
+        if (isempty())
         {
-            int pos1 = (q->front + j) % q->_size;
-            int pos2 = (q->front + j + 1) % q->_size;
+            cout << "Queue underflow\n";
+            return INT_MIN;
+        }
 
-            if (q->arr[pos1] > q->arr[pos2])
-            {
-                temp = q->arr[pos1];
-                q->arr[pos1] = q->arr[pos2];
-                q->arr[pos2] = temp;
-            }
+        return arr[front];
+    }
+
+    void enqueue(int data)
+    {
+        if (isfull())
+        {
+            cout << "Queue overflow\n";
+            return;
+        }
+        if (isempty())
+        {
+            front = rear = 0;
+        }
+        else
+        {
+            rear = (rear + 1) % _size;
+        }
+        arr[rear] = data;
+    }
+
+    void dequeue()
+    {
+        if (isempty())
+        {
+            cout << "Queue underflow\n";
+            return;
+        }
+
+        if (front == rear)
+        {
+            front = rear = -1;
+        }
+        else
+        {
+            front = (front + 1) % _size;
         }
     }
 
-    cout << "Queue sorted successfully\n";
-}
-
-
-void print(queue *q)
-{
-    if (isempty(q))
+    void sortqueue()
     {
-        cout << "Queue is empty\n";
-        return;
+        if (isempty())
+        {
+            cout << "Queue is empty\n";
+            return;
+        }
+        int n = (rear - front + _size) % _size + 1;
+        for (int i = 0; i < n - 1; i++)
+        {
+            for (int j = 0; j < n - i - 1; j++)
+            {
+                int pos1 = (front + j) % _size;
+                int pos2 = (front + j + 1) % _size;
+                if (arr[pos1] > arr[pos2])
+                {
+                    int temp = arr[pos1];
+                    arr[pos1] = arr[pos2];
+                    arr[pos2] = temp;
+                }
+            }
+        }
+        cout << "Queue sorted successfully\n";
     }
 
-    int i;
-
-    for (i = q->front; i != q->rear; i = (i + 1) % q->_size)
+    void print()
     {
-        cout << q->arr[i] << "->";
+        if (isempty())
+        {
+            cout << "Queue is empty\n";
+            return;
+        }
+        int i;
+        for (i = front; i != rear; i = (i + 1) % _size)
+        {
+            cout << arr[i] << "->";
+        }
+        cout << arr[i] << endl;
     }
-
-    cout << q->arr[i] << endl;
-}
+    ~Queue()
+    {
+        delete[] arr;
+    }
+};
 
 int operateQueue()
 {
-    queue *q = newqueue(5);
-
-    if (q == nullptr)
-    {
-        cout << "Memory allocation failed\n";
-        return 1;
-    }
-
+    Queue q(5);
     int ch, data;
-
     while (true)
     {
-        cout << "\n------- QUEUE MENU DRIVEN -------\n";
+        cout << "\n------- CIRCULAR QUEUE MENU -------\n";
         cout << "1. Enqueue\n";
         cout << "2. Dequeue\n";
         cout << "3. Front\n";
         cout << "4. Sort queue\n";
         cout << "5. Print Queue\n";
         cout << "6. Exit\n";
-
         cout << "Enter your choice: ";
         cin >> ch;
-
         switch (ch)
         {
             case 1:
                 cout << "Enter data: ";
                 cin >> data;
-                enque(q, data);
+                q.enqueue(data);
                 break;
 
             case 2:
-                deque(q);
+                q.dequeue();
                 break;
 
             case 3:
-                front(q);
+                if (!q.isempty())
+                    cout << "Front element: " << q.getfront() << endl;
+                else
+                    cout << "Queue underflow\n";
                 break;
-            
+
             case 4:
-                sortqueue(q);
+                q.sortqueue();
                 break;
 
             case 5:
-                print(q);
+                q.print();
                 break;
 
             case 6:
-                delete[] q->arr;
-                delete q;
-
                 cout << "Program ended\n";
                 return 0;
 
@@ -194,7 +169,6 @@ int operateQueue()
         }
     }
 }
-
 int main()
 {
     return operateQueue();
