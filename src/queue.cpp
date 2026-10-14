@@ -140,11 +140,11 @@ int operateQueue()
                 cin >> data;
                 q.enqueue(data);
                 break;
-
+            
             case 2:
                 q.dequeue();
                 break;
-
+            
             case 3:
                 if (!q.isempty())
                     cout << "Front element: " << q.getfront() << endl;
