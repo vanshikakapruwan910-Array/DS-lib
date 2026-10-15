@@ -2,6 +2,7 @@
 #include"array.hpp"
 
 using namespace std;
+
 void display(int arr[],int n)
 {
     int i;
