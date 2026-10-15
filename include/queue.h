@@ -7,6 +7,7 @@ int isempty(struct queue *q);
 int front(struct queue *q);
 void enque(struct queue *q,int data);
 void deque(struct queue *q);
+void sortQueue(struct queue *q);
 void print(struct queue *q);
 int operateQueue();
 #endif
