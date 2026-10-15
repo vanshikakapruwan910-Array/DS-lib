@@ -1,277 +1,339 @@
 #include <iostream>
-#include <cstdlib>
-
-struct Node{
+using namespace std;
+class Node
+{
+public:
     int data;
-    struct Node* next;
+    Node* next;
+    Node(int data)
+    {
+        this->data = data;
+        next = NULL;
+    }
 };
 
-struct Node* makeNode(int data){
-    struct Node* new=(struct Node*)malloc(sizeof(struct Node));
-    new->data=data;
-    new->next=NULL;
-    return new;
-}
-
-void displayLL(struct Node* head){
-    struct Node* temp=head;
-    while(temp!=NULL){
-        printf("%d -> ",temp->data);
-        temp=temp->next;
-    }
-    printf("NULL\n");
-}
-
-void insertAtBeginLL(struct Node** head, int data){
-    struct Node* new=makeNode(data);
-    new->next=*head;
-    *head=new;
-}
-
-void insertAtEndLL(struct Node** head, int data){
-    struct Node* new=makeNode(data);
-    if (*head==NULL){
-        *head=new;
-        return;
-    }
-    struct Node* temp=*head;
-    while(temp->next!=NULL){
-        temp=temp->next;
-    }
-    temp->next=new;
-}
-
-void insertBeforeKLL(struct Node** head, int data, int k){
-    struct Node* new=makeNode(data);
-    if (*head==NULL){
-        *head=new;
-        return;
-    }
-    if((*head)->data==k){
-        new->next=*head;
-        *head=new;
-        return;
-    }
-    struct Node* temp=*head;
-    while(temp->next!=NULL && temp->next->data!=k){
-        temp=temp->next;
-    }
-    if(temp->next==NULL){
-        free(new);
-        return;
-    }
-    new->next=temp->next;
-    temp->next=new;
-}
-
-void insertAfterKLL(struct Node** head, int data, int k){
-    struct Node* new=makeNode(data);
-    if (*head==NULL){
-        *head=new;
-        return;
-    }
-    struct Node* temp=*head;
-    while(temp != NULL && temp->data != k)
-        temp=temp->next;
-
-    if(temp==NULL){
-        free(new);
-        return;
-    }
-    new->next=temp->next;
-    temp->next=new;
-}
-
-void insertAtILL(struct Node** head, int data, int pos){
-    struct Node* new=makeNode(data);
-    if (pos==0){
-        insertAtBegin(head,data);
-        return;
-    }
-    struct Node* temp=*head;
-    for(int i=0;temp!=NULL && i<pos-1;i++){
-        temp = temp->next;
-    }
-    if (temp == NULL) {
-        printf("pos out of range\n");
-        free(new);
-        return;
-    }
-    new->next = temp->next;
-    temp->next = new;
-}
-
-void deleteAtBeginLL(struct Node** head){
-    if(*head==NULL){
-        printf("Empty linked list.\n");
-        return;
-    }
-    struct Node* temp=*head;
-    *head=temp->next;
-    free(temp);
-}
-
-void deleteAtEndLL(struct Node** head){
-    if (*head==NULL){
-        printf("Empty linked list.\n");
-        return;
-    }
-    struct Node* temp = *head;
-    if(temp->next==NULL){
-        free(temp);
-        *head=NULL;
-        return;
-    }
-    while(temp->next->next!=NULL){
-        temp=temp->next;
-    }
-    free(temp->next);
-    temp->next=NULL;
-}
-
-void deleteAtILL(struct Node** head, int pos){
-    if(*head==NULL){
-        printf("Empty linked list.\n");
-        return;
-    }
-    struct Node* temp=*head;
-    if(pos==0){
-        deleteAtBegin(head);
-        return;
-    }
-    for(int i=0;temp!=NULL && i<pos-1;i++){
-        temp = temp->next;
-    }
-    if(temp==NULL||temp->next==NULL){
-        printf("Position is out of range.\n");
-        return;
-    }
-    struct Node* next = temp->next->next;
-    free(temp->next);
-    temp->next = next;
-}
-
-void deleteValueKLL(struct Node** head, int k){
-    if(*head==NULL){
-        printf("Empty linked list.\n");
-        return;
-    }
-    struct Node* temp=*head;
-    if(temp->data==k){
-        *head=temp->next;
-        free(temp);
-        return;
+class LinkedList
+{
+    Node* head;
+public:
+    LinkedList()
+    {
+        head = NULL;
     }
 
-    while(temp->next!=NULL && temp->next->data!=k){
-        temp=temp->next;
-    }
-    if(temp->next==NULL){
-        printf("Value not found.\n");
-        return;
-    }
-    struct Node* toDelete = temp->next;
-    temp->next = toDelete->next;
-    free(toDelete);
-}
+    void display()
+    {
+        Node* temp = head;
 
-void searchLL(struct Node* head, int data){
-    struct Node* temp=head;
-    int i=0,f=0;
-    while(temp!=NULL){
-        if(temp->data){
-            printf("Found at index %d.\n",i);
-            f=1;
+        while (temp != NULL)
+        {
+            cout << temp->data << " -> ";
+            temp = temp->next;
         }
-        temp=temp->next;
-        i++;
+        cout << "NULL\n";
     }
-    if(!f)
-        printf("Given value not found in linked list.\n");
-    
-}
 
-void lengthLL(struct Node* head){
-    struct Node* temp=head;
-    int c=0;
-    while(temp!=NULL){
-        c++;
-        temp=temp->next;
+    void insertAtBegin(int data)
+    {
+        Node* n = new Node(data);
+        n->next = head;
+        head = n;
     }
-    printf("Length of linked list: %d\n",c);
-}
 
-int operateLL(){
-    int c,d,k;
-    struct Node *a=NULL;
-    do{
-        printf("Enter: 0 to display LL\n1 to insert at begin\n2 to insert at end\n3 to insert before k\n4 to inser after k\n5 to insert at i\n6 to delete at begin\n7 to delete at end\n8 to delete at i\n9 to delete node having value k\n10 to search the linked list for a value\n11 to find the length of the linked list\n-1 to exit.\n");
-        scanf("%d",&c);
-        switch(c){
+    void insertAtEnd(int data)
+    {
+        Node* n = new Node(data);
+        if (head == NULL)
+        {
+            head = n;
+            return;
+        }
+
+        Node* temp = head;
+        while (temp->next != NULL)
+            temp = temp->next;
+        temp->next = n;
+    }
+
+    void insertBeforeK(int data, int k)
+    {
+        if (head == NULL)
+        {
+            cout << "Value not found.\n";
+            return;
+        }
+        if (head->data == k)
+        {
+            insertAtBegin(data);
+            return;
+        }
+        Node* temp = head;
+        while (temp->next != NULL && temp->next->data != k)
+            temp = temp->next;
+        if (temp->next == NULL)
+        {
+            cout << "Value not found.\n";
+            return;
+        }
+        Node* n = new Node(data);
+        n->next = temp->next;
+        temp->next = n;
+    }
+
+    void insertAfterK(int data, int k)
+    {
+        Node* temp = head;
+        while (temp != NULL && temp->data != k)
+            temp = temp->next;
+        if (temp == NULL)
+        {
+            cout << "Value not found.\n";
+            return;
+        }
+        Node* n = new Node(data);
+        n->next = temp->next;
+        temp->next = n;
+    }
+
+    void insertAtI(int data, int pos)
+    {
+        if (pos < 0)
+        {
+            cout << "Invalid position.\n";
+            return;
+        }
+        if (pos == 0)
+        {
+            insertAtBegin(data);
+            return;
+        }
+        Node* temp = head;
+        for (int i = 0; temp != NULL && i < pos - 1; i++)
+            temp = temp->next;
+        if (temp == NULL)
+        {
+            cout << "Position out of range.\n";
+            return;
+        }
+        Node* n = new Node(data);
+        n->next = temp->next;
+        temp->next = n;
+    }
+
+    void deleteAtBegin()
+    {
+        if (head == NULL)
+        {
+            cout << "Empty linked list.\n";
+            return;
+        }
+        Node* temp = head;
+        head = head->next;
+        delete temp;
+    }
+
+    void deleteAtEnd()
+    {
+        if (head == NULL)
+        {
+            cout << "Empty linked list.\n";
+            return;
+        }
+        if (head->next == NULL)
+        {
+            delete head;
+            head = NULL;
+            return;
+        }
+        Node* temp = head;
+        while (temp->next->next != NULL)
+            temp = temp->next;
+        delete temp->next;
+        temp->next = NULL;
+    }
+
+    void deleteAtI(int pos)
+    {
+        if (pos < 0 || head == NULL)
+        {
+            cout << "Invalid position or empty list.\n";
+            return;
+        }
+        if (pos == 0)
+        {
+            deleteAtBegin();
+            return;
+        }
+        Node* temp = head;
+        for (int i = 0; temp != NULL && i < pos - 1; i++)
+            temp = temp->next;
+        if (temp == NULL || temp->next == NULL)
+        {
+            cout << "Position out of range.\n";
+            return;
+        }
+        Node* del = temp->next;
+        temp->next = del->next;
+        delete del;
+    }
+
+    void deleteValueK(int k)
+    {
+        if (head == NULL)
+        {
+            cout << "Empty linked list.\n";
+            return;
+        }
+        if (head->data == k)
+        {
+            deleteAtBegin();
+            return;
+        }
+        Node* temp = head;
+        while (temp->next != NULL && temp->next->data != k)
+            temp = temp->next;
+        if (temp->next == NULL)
+        {
+            cout << "Value not found.\n";
+            return;
+        }
+        Node* del = temp->next;
+        temp->next = del->next;
+        delete del;
+    }
+
+    void search(int data)
+    {
+        Node* temp = head;
+        int i = 0;
+        while (temp != NULL)
+        {
+            if (temp->data == data)
+            {
+                cout << "Found at index " << i << ".\n";
+                return;
+            }
+            temp = temp->next;
+            i++;
+        }
+        cout << "Value not found.\n";
+    }
+
+    void length()
+    {
+        Node* temp = head;
+        int count = 0;
+        while (temp != NULL)
+        {
+            count++;
+            temp = temp->next;
+        }
+        cout << "Length: " << count << "\n";
+    }
+
+    ~LinkedList()
+    {
+        Node* temp;
+        while (head != NULL)
+        {
+            temp = head;
+            head = head->next;
+            delete temp;
+        }
+    }
+};
+
+int main()
+{
+    LinkedList a;
+    int c, d, k;
+    do
+    {
+        cout << "\n0. Display\n"
+             << "1. Insert at beginning\n"
+             << "2. Insert at end\n"
+             << "3. Insert before k\n"
+             << "4. Insert after k\n"
+             << "5. Insert at position i\n"
+             << "6. Delete at beginning\n"
+             << "7. Delete at end\n"
+             << "8. Delete at position i\n"
+             << "9. Delete node having value k\n"
+             << "10. Search a value\n"
+             << "11. Find length\n"
+             << "-1. Exit\n"
+             << "Enter choice: ";
+
+        cin >> c;
+        switch (c)
+        {
             case 0:
-                displayLL(a);
+                a.display();
                 break;
+
             case 1:
-                printf("Enter data to insert.\n");
-                cin >> d;
-                insertAtBeginLL(&a,d);
-                printf("Element inserted.\n");
-                break;
             case 2:
-                printf("Enter data to insert.\n");
+                cout << "Enter data: ";
                 cin >> d;
-                insertAtEndLL(&a,d);
-                printf("Element inserted.\n");
+                if (c == 1)
+                    a.insertAtBegin(d);
+                else
+                    a.insertAtEnd(d);
                 break;
+
             case 3:
-                printf("Enter data to insert and k.\n");
-                cin >> d >> k;
-                insertBeforeKLL(&a,d,k);
-                printf("Element inserted.\n");
-                break;
             case 4:
-                printf("Enter data to insert and k.\n");
+                cout << "Enter data and k: ";
                 cin >> d >> k;
-                insertAfterKLL(&a,d,k);
-                printf("Element inserted.\n");
+                if (c == 3)
+                    a.insertBeforeK(d, k);
+                else
+                    a.insertAfterK(d, k);
                 break;
+
             case 5:
-                printf("Enter data to insert and i.\n");
+                cout << "Enter data and position: ";
                 cin >> d >> k;
-                insertAtILL(&a,d,k);
-                printf("Element inserted.\n");
+                a.insertAtI(d, k);
                 break;
+
             case 6:
-                deleteAtBeginLL(&a);
-                printf("Element deleted.\n");
+                a.deleteAtBegin();
                 break;
+
             case 7:
-                deleteAtEndLL(&a);
-                printf("Element deleted.\n");
+                a.deleteAtEnd();
                 break;
+
             case 8:
-                printf("Enter i.");
+                cout << "Enter position: ";
                 cin >> k;
-                deleteAtILL(&a,k);
-                printf("Element deleted.\n");
+                a.deleteAtI(k);
                 break;
+
             case 9:
-                printf("Enter k.\n");
+                cout << "Enter value: ";
                 cin >> k;
-                deleteValueKLL(&a,k);
-                printf("Element deleted.\n");
+                a.deleteValueK(k);
                 break;
+
             case 10:
-                printf("Enter value to find.\n");
+                cout << "Enter value to search: ";
                 cin >> k;
-                searchLL(a,k);
+                a.search(k);
                 break;
+
             case 11:
-                lengthLL(a);
+                a.length();
                 break;
+
+            case -1:
+                cout << "Exiting program.\n";
+                break;
+
             default:
-                printf("Invalid Input\n");
+                cout << "Invalid input.\n";
         }
-    }while(c!=-1);
+    } while (c != -1);
     return 0;
 }
