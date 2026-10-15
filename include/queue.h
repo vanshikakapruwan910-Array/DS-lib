@@ -1,13 +1,24 @@
 #ifndef QUEUE_H
 #define QUEUE_H
-#include<stddef.h>
-struct queue *newqueue(size_t _size);
-int isfull(struct queue *q);
-int isempty(struct queue *q);
-int front(struct queue *q);
-void enque(struct queue *q,int data);
-void deque(struct queue *q);
-void sortQueue(struct queue *q);
-void print(struct queue *q);
+#include <iostream>
+#include <climits>
+#include <cstddef>
+using namespace std;
+class Queue
+{
+    int *arr;
+    int front, rear;
+    size_t _size;
+public:
+    Queue(size_t s);
+    bool isfull();
+    bool isempty();
+    int getfront();
+    void enqueue(int data);
+    void dequeue();
+    void sortqueue();
+    void print();
+};
 int operateQueue();
 #endif
+
