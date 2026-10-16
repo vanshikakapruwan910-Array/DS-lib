@@ -21,7 +21,7 @@ public:
         head = NULL;
     }
 
-    void display()
+    void displayLL()
     {
         Node* temp = head;
 
@@ -33,14 +33,14 @@ public:
         cout << "NULL\n";
     }
 
-    void insertAtBegin(int data)
+    void insertAtBeginLL(int data)
     {
         Node* n = new Node(data);
         n->next = head;
         head = n;
     }
 
-    void insertAtEnd(int data)
+    void insertAtEndLL(int data)
     {
         Node* n = new Node(data);
         if (head == NULL)
@@ -55,7 +55,7 @@ public:
         temp->next = n;
     }
 
-    void insertBeforeK(int data, int k)
+    void insertBeforeKLL(int data, int k)
     {
         if (head == NULL)
         {
@@ -64,7 +64,7 @@ public:
         }
         if (head->data == k)
         {
-            insertAtBegin(data);
+            insertAtBeginLL(data);
             return;
         }
         Node* temp = head;
@@ -80,7 +80,7 @@ public:
         temp->next = n;
     }
 
-    void insertAfterK(int data, int k)
+    void insertAfterKLL(int data, int k)
     {
         Node* temp = head;
         while (temp != NULL && temp->data != k)
@@ -95,7 +95,7 @@ public:
         temp->next = n;
     }
 
-    void insertAtI(int data, int pos)
+    void insertAtILL(int data, int pos)
     {
         if (pos < 0)
         {
@@ -104,7 +104,7 @@ public:
         }
         if (pos == 0)
         {
-            insertAtBegin(data);
+            insertAtBeginLL(data);
             return;
         }
         Node* temp = head;
@@ -120,7 +120,7 @@ public:
         temp->next = n;
     }
 
-    void deleteAtBegin()
+    void deleteAtBeginLL()
     {
         if (head == NULL)
         {
@@ -132,7 +132,7 @@ public:
         delete temp;
     }
 
-    void deleteAtEnd()
+    void deleteAtEndLL()
     {
         if (head == NULL)
         {
@@ -152,7 +152,7 @@ public:
         temp->next = NULL;
     }
 
-    void deleteAtI(int pos)
+    void deleteAtILL(int pos)
     {
         if (pos < 0 || head == NULL)
         {
@@ -161,7 +161,7 @@ public:
         }
         if (pos == 0)
         {
-            deleteAtBegin();
+            deleteAtBeginLL();
             return;
         }
         Node* temp = head;
@@ -177,7 +177,7 @@ public:
         delete del;
     }
 
-    void deleteValueK(int k)
+    void deleteValueKLL(int k)
     {
         if (head == NULL)
         {
@@ -186,7 +186,7 @@ public:
         }
         if (head->data == k)
         {
-            deleteAtBegin();
+            deleteAtBeginLL();
             return;
         }
         Node* temp = head;
@@ -202,7 +202,7 @@ public:
         delete del;
     }
 
-    void search(int data)
+    void searchLL(int data)
     {
         Node* temp = head;
         int i = 0;
@@ -219,7 +219,7 @@ public:
         cout << "Value not found.\n";
     }
 
-    void length()
+    void lengthLL()
     {
         Node* temp = head;
         int count = 0;
@@ -268,7 +268,7 @@ int main()
         switch (c)
         {
             case 0:
-                a.display();
+                a.displayLL();
                 break;
 
             case 1:
@@ -276,9 +276,9 @@ int main()
                 cout << "Enter data: ";
                 cin >> d;
                 if (c == 1)
-                    a.insertAtBegin(d);
+                    a.insertAtBeginLL(d);
                 else
-                    a.insertAtEnd(d);
+                    a.insertAtEndLL(d);
                 break;
 
             case 3:
@@ -286,45 +286,45 @@ int main()
                 cout << "Enter data and k: ";
                 cin >> d >> k;
                 if (c == 3)
-                    a.insertBeforeK(d, k);
+                    a.insertBeforeKLL(d, k);
                 else
-                    a.insertAfterK(d, k);
+                    a.insertAfterKLL(d, k);
                 break;
 
             case 5:
                 cout << "Enter data and position: ";
                 cin >> d >> k;
-                a.insertAtI(d, k);
+                a.insertAtILL(d, k);
                 break;
 
             case 6:
-                a.deleteAtBegin();
+                a.deleteAtBeginLL();
                 break;
 
             case 7:
-                a.deleteAtEnd();
+                a.deleteAtEndLL();
                 break;
 
             case 8:
                 cout << "Enter position: ";
                 cin >> k;
-                a.deleteAtI(k);
+                a.deleteAtILL(k);
                 break;
 
             case 9:
                 cout << "Enter value: ";
                 cin >> k;
-                a.deleteValueK(k);
+                a.deleteValueKLL(k);
                 break;
 
             case 10:
                 cout << "Enter value to search: ";
                 cin >> k;
-                a.search(k);
+                a.searchLL(k);
                 break;
 
             case 11:
-                a.length();
+                a.lengthLL();
                 break;
 
             case -1:
