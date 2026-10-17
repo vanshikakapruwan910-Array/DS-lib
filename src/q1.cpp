@@ -131,7 +131,7 @@ void Queue::enqueueFront(int data)
     }
     else
     {
-        front = (front + _size - 1) % _size;   // move front one step back
+        front = (front + _size - 1) % _size;   
     }
  
     arr[front] = data;
@@ -146,7 +146,7 @@ void Queue::dequeueRear()
         return;
     }
  
-    rear = (rear + _size - 1) % _size;         // move rear one step back
+    rear = (rear + _size - 1) % _size;       
     count--;
     if (count == 0)
     {
