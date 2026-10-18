@@ -1,6 +1,6 @@
 #include <iostream>
 <<<<<<< HEAD
-#include <cstdlib.h>
+#include <cstdlib>
 #include "array.hpp"
 #include "ll.hpp"
 =======
@@ -42,6 +42,7 @@ int main(){
         cout<<"-----1. To operate ARRAY-----"<<endl<<"-----2. To operate on LINKED LIST-----"<<endl<< "-----3. To operate on STACK-----"<< "-----4. To operate on QUEUE-----"<<"-----5. To EXIT-----"<<endl;
         cin>>c;
         switch(c){
+
 
            case 2:
                 operateLL();
