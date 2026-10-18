@@ -8,7 +8,7 @@
 #include "ll.h"
 >>>>>>> 79fb0ffdbdcd68cdf4ae3343780de77a1024780e
 #include "stack.h"
-#include "queue.h"
+#include "q1.h"
 
 using namespace std;
 
