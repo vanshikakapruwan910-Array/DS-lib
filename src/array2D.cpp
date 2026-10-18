@@ -78,8 +78,7 @@ public:
     }
 
     // Insert before element
-    void INSERT_Before_element2D(
-        int arr[MAX][MAX], int &r, int c)
+    void INSERT_Before_element2D(int arr[MAX][MAX], int &r, int c)
     {
         int key, pos = -1;
 
@@ -118,8 +117,7 @@ public:
     }
 
     // Insert after element
-    void INSERT_After_element2D(
-        int arr[MAX][MAX], int &r, int c)
+    void INSERT_After_element2D( int arr[MAX][MAX], int &r, int c)
     {
         int key, pos = -1;
 
@@ -160,8 +158,7 @@ public:
     }
 
     // Delete at beginning
-    void DELETE_AT_Begin2D(
-        int arr[MAX][MAX], int &r, int c)
+    void DELETE_AT_Begin2D(int arr[MAX][MAX], int &r, int c)
     {
         if (r == 0)
         {
@@ -177,8 +174,7 @@ public:
     }
 
     // Delete at end
-    void DELETE_AT_End2D(
-        int arr[MAX][MAX], int &r, int c)
+    void DELETE_AT_End2D(int arr[MAX][MAX], int &r, int c)
     {
         if (r > 0)
             r--;
@@ -187,8 +183,7 @@ public:
     }
 
     // Delete at ith position
-    void DELETE_AT_ith_position2D(
-        int arr[MAX][MAX], int &r, int c)
+    void DELETE_AT_ith_position2D( int arr[MAX][MAX], int &r, int c)
     {
         int pos;
 
@@ -209,8 +204,7 @@ public:
     }
 
     // Delete before element
-    void DELETE_Before_element2D(
-        int arr[MAX][MAX], int &r, int c)
+    void DELETE_Before_element2D( int arr[MAX][MAX], int &r, int c)
     {
         int key, pos = -1;
 
@@ -239,8 +233,7 @@ public:
     }
 
     // Delete after element
-    void DELETE_After_element2D(
-        int arr[MAX][MAX], int &r, int c)
+    void DELETE_After_element2D(int arr[MAX][MAX], int &r, int c)
     {
         int key, pos = -1;
 
@@ -382,8 +375,7 @@ public:
     }
 
     // Count even and odd elements
-    void countevenodd2D(
-        int arr[MAX][MAX], int r, int c)
+    void countevenodd2D(int arr[MAX][MAX], int r, int c)
     {
         int even = 0, odd = 0;
 
