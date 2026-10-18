@@ -3,39 +3,39 @@
 
 using namespace std;
 
-void display(int arr[],int n)
+void display(int arr[],int *n)
 {
     int i;
     cout<<"Array: ";
-    for(i=0;i<n;i++)
+    for(i=0;i< *n;i++)
     {
-        cout<<arr[i];
+        cout<<arr[i]<<"\t";
     }
     cout<<"\n";
 }
 
-void update(int arr[], int n)
+void update(int arr[], int *n)
 {
     int pos,x;
     cout<<"Enter position to update: ";
     cin>>pos;
-    if(pos < 1 || pos > n)
+    if(pos < 1 || pos > *n)
     {
         cout<<"Invalid position\n";
         return;
     }
     cout<<"enter new element: ";
     cin>>x;
-    arr[pos-1]=x;
+    arr[pos-1]= x;
 }
 
-void search(int arr[],int n)
+void search(int arr[],int *n)
 {
     int x,i,found=0;
-    cout<<"enter element to search: ";
+    cout<<"Enter element to search: ";
     cin>>x;
 
-    for(i=0;i<n;i++)
+    for(i=0;i< *n;i++)
     {
         if(arr[i] == x)
         {
@@ -50,19 +50,22 @@ void search(int arr[],int n)
     }
 }
 
-void reversearray(int arr[], int n)
+void reversearray(int arr[], int *n)
 {
     int i,temp;
     cout<<"Reversed array : ";
-    for(i=0;i<n/2;i++)
+    for(i=0;i< *n/2;i++)
     {
         temp = arr[i];
-        arr[i] = arr[n-i-1];
-        arr[n-i-1] = temp;
+        arr[i] = arr[*n-i-1];
+        arr[*n-i-1] = temp;
     }
+    cout<<"Array reversed"<<endl;
+    display(arr,n);
+
 }
 
-void sort(int arr[], int n)
+void sort(int arr[], int *n)
 {
     int i,j ,temp,ch;
     cout<<"1.Ascending Order: ";
@@ -70,94 +73,101 @@ void sort(int arr[], int n)
 
     cout<<"\nEnter your choice:";
     cin>>ch;
-    for(i=0;i<n;i++)
+    if(ch == 1)
     {
-        if(ch==1 && arr[i]>arr[i+1])
+        for(i=0;i<(*n);i++)
         {
-            temp = arr[i];
-            arr[i] =  arr[i+1];
-            arr[i+1] = temp;
+            if(ch==1 && arr[i]>arr[i+1])
+            {
+                temp = arr[i];
+                arr[i] =  arr[i+1];
+                arr[i+1] = temp;
+            }
         }
     }
-    for(i=0;i<n;i++)
+    else
     {
-        if(ch==2 && arr[i]<arr[i+1])
+        for(i=0;i< *n;i++)
         {
-            temp = arr[i];
-            arr[i] =  arr[i+1];
-            arr[i+1] = temp;
+            if(ch==2 && arr[i]<arr[i+1])
+            {
+                temp = arr[i];
+                arr[i] =  arr[i+1];
+                arr[i+1] = temp;
+            }
         }
     }
     cout<<"Sorted array: ";
-    for(i=0;i<n;i++)
-        cout<<arr[i]<<" ";
+    display(arr,n);
 }
 
 
 
 
-void DELETE_AT_Begin(int arr[], int n)
+void DELETE_AT_Begin(int arr[], int *n)
 {
-    if (n <= 0)
+    if (*n <= 0)
     {
         cout << "Array is empty";
         return;
     }
 
-    for (int i = 0; i < n - 1; i++)
+    for (int i = 0; i < *n - 1; i++)
     {
         arr[i] = arr[i + 1];
     }
+    (*n)--;
 
     cout << "Element deleted from beginning";
 }
 
-void DELETE_AT_End(int arr[], int n)
+void DELETE_AT_End(int arr[], int *n)
 {
-    if (n <= 0)
+    if (*n <= 0)
     {
         cout << "Array is empty";
         return;
     }
 
-    n--;
+    (*n)--;
 
     cout << "Element deleted from end";
 }
 
-void DELETE_AT_ith_position(int arr[], int n)
+void DELETE_AT_ith_position(int arr[], int *n)
 {
     int pos;
-    if (n <= 0)
+    if ((*n) <= 0)
     {
         cout << "Array is empty";
         return;
     }
     cout << "Enter position: ";
     cin >> pos;
-    if (pos < 1 || pos > n)
+    if (pos < 1 || pos > (*n))
     {
-        cout << "Invalid position";
+        cout << "Invalid position"<<endl;
         return;
     }
-    for (int i = pos - 1; i < n - 1; i++)
+    for (int i = pos - 1; i < (*n) - 1; i++)
     {
         arr[i] = arr[i + 1];
     }
+    (*n)--;
     cout << "Element deleted from position " << pos;
 }
 
-void DELETE_Before_element(int arr[], int n)
+void DELETE_Before_element(int arr[], int *n)
 {
     int e, pos = -1;
-    if (n <= 0)
+    if ((*n) <= 0)
     {
         cout << "Array is empty.";
         return;
     }
-    cout << "Enter element: ";
+    cout << "Enter element to delete: ";
     cin >> e;
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < (*n); i++)
     {
         if (arr[i] == e)
         {
@@ -175,24 +185,26 @@ void DELETE_Before_element(int arr[], int n)
         cout << "No element exists before " << e;
         return;
     }
-    for (int i = pos - 1; i < n - 1; i++)
+    for (int i = pos - 1; i < (*n)- 1; i++)
     {
         arr[i] = arr[i + 1];
     }
+    (*n)--;
     cout << "Element before " << e << " deleted";
 }
 
-void DELETE_After_element(int arr[], int n)
+
+void DELETE_After_element(int arr[], int *n)
 {
     int e, pos = -1;
-    if (n <= 0)
+    if ((*n) <= 0)
     {
         cout << "Array is empty";
         return;
     }
-    cout << "Enter element: ";
+    cout << "Enter element to delete: ";
     cin >> e;
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < (*n); i++)
     {
         if (arr[i] == e)
         {
@@ -205,58 +217,57 @@ void DELETE_After_element(int arr[], int n)
         cout << "Element " << e << " not found";
         return;
     }
-    if (pos == n - 1)
+    if (pos == (*n)- 1)
     {
         cout << "No element exists after " << e;
         return;
     }
-    for (int i = pos + 1; i < n - 1; i++)
+    for (int i = pos + 1; i < (*n)- 1; i++)
     {
         arr[i] = arr[i + 1];
     }
+    (*n)--;
     cout << "Element after " << e << " deleted";
 }
 
 
-
-
-int INSERT_AT_Begin(int arr[], int n)
+int INSERT_AT_Begin(int arr[], int *n)
 {
     int x, i;
-
     cout<<"Enter element: ";
     cin>>x;
-
-    for(i = n; i > 0; i--)
+    for(i = (*n); i > 0; i--)
     {
         arr[i] = arr[i - 1];
     }
 
     arr[0] = x;
 
-    n++;
+    (*n)++;
 
-    return n;
+    return *n;
 }
-int INSERT_AT_End(int arr[], int n)
+
+
+int INSERT_AT_End(int arr[], int *n)
 {
     int x;
 
     cout<<"Enter element: ";
     cin>>x;
 
-    arr[n] = x;
+    arr[*n] = x;
 
-    n++;
+    (*n)++;
 
-    return n;
+    return *n;
 }
 
-void INSERT_AT_Ith_position(int arr[],int n)
+void INSERT_AT_Ith_position(int arr[],int *n)
 {
     int i,pos,ind,x;
     cout<<"Enter elements: ";
-    for(i=0;i<n;i++)
+    for(i=0;i< *n;i++)
     {
         scanf("%d", &arr[i]);
     }
@@ -264,19 +275,19 @@ void INSERT_AT_Ith_position(int arr[],int n)
     cin>>ind;
     cout<<"Enter value to insert: ";
     cin>>x;
-    if(ind<0||ind>n)
+    if(ind<0||ind> *n)
     {
         cout<<"Invalid position.";
         return;
     }
-    for(i=n;i>ind;i--)
+    for(i= *n;i>ind;i--)
     {
         arr[i]= arr[i-1];
     }
     arr[ind]= x;
-    n++;
+    (*n)++;
     cout<<"Final array after insertion: ";
-    for(i=0;i<n;i++)
+    for(i=0;i< *n;i++)
     {
         printf("%d", arr[i]);
     }
@@ -344,14 +355,11 @@ void INSERT_After_element(int arr[], int *n)
 }
 
 
-
-
-
-void displayeven(int arr[], int n)
+void displayeven(int arr[], int *n)
 {
     int i;
     cout<<"Even elements: ";
-    for(i=0;i<n;i++)
+    for(i=0;i< (*n);i++)
     {
         if(arr[i]%2==0)
         {
@@ -360,11 +368,12 @@ void displayeven(int arr[], int n)
     }
 }
 
-void displayodd(int arr[], int n)
+
+void displayodd(int arr[], int *n)
 {
     int i;
     cout<<"Odd elements: ";
-    for(i=0;i<n;i++)
+    for(i=0;i< *n;i++)
     {
         if(arr[i]%2!=0)
         {
@@ -373,10 +382,10 @@ void displayodd(int arr[], int n)
     }
 }
 
-void countevenodd(int arr[], int n)
+void countevenodd(int arr[], int *n)
 {
     int i , even=0,odd=0;
-    for(i=0;i<n;i++)
+    for(i=0;i< *n;i++)
     {
         if(arr[i]%2==0)
             even++;
