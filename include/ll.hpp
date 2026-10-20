@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 #ifndef LINKEDLIST_H
 #define LINKEDLIST_H
 class Node
@@ -35,3 +36,6 @@ public:
 };
 
 #endif
+=======
+
+>>>>>>> 29d38a0d585a17784f47325cf6f3c88d0ec0a22d
