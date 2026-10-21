@@ -25,19 +25,17 @@ int Stack::getTop()
     }
     return s[top];
 }
-
-void Stack::push()
+void  Stack::push(int x)
 {
-    int x;
+     
     if(isFull())
     {
         cout<<"Stack Overflow"<<endl;
         return;
     }
-    cout<<"Enter a element:";
-    cin>>x;
+    //cout<<"Enter a element:";
+    //cin>>x;
     s[++top] = x;
-    cout<<"Pushed element: "<< x <<endl;
 }
 
 int Stack::pop()
@@ -102,7 +100,8 @@ void operatestack()
       switch(ch)
       {
         case 1:
-         st.push();
+
+         st.push(10);
          break;
         case 2:
          st.pop();
