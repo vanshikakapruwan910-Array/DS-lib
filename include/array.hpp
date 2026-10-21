@@ -1,53 +1,66 @@
+
 #ifndef ARRAY_HPP
 #define ARRAY_HPP
+
 #define MAX 100
 
-int INSERT_AT_Begin(int arr[],int *n);
-int INSERT_AT_End(int arr[],int *n);
-void INSERT_AT_Ith_position(int arr[],int *n);
-void INSERT_Before_element(int arr[],int *n);
-void INSERT_After_element(int arr[],int *n);
+class Array
+{
+private:
+    int arr[MAX];
+    int n;
 
+public:
+    Array();
 
-void DELETE_AT_Begin(int arr[],int *n);
-void DELETE_AT_End(int arr[],int *n);
-void DELETE_AT_ith_position(int arr[],int *n);
-void DELETE_Before_element(int arr[],int *n);
-void DELETE_After_element(int arr[],int *n);
+    void initialize(const int values[], int size);
+    void display() const;
+    void update();
+    void search() const;
+    void reversearray();
+    void sort();
 
+    void INSERT_AT_Begin();
+    void INSERT_AT_End();
+    void DELETE_AT_Begin();
+    void DELETE_AT_End();
 
-void display(int arr[],int *n);
-void update(int arr[],int *n);
-void search(int arr[],int *n);
-void reversearray(int arr[],int *n);
-void sort(int arr[],int *n);
+    void displayeven() const;
+    void displayodd() const;
+    void countevenodd() const;
 
-void displayeven(int arr[],int *n);
-void displayodd(int arr[],int *n);
-void countevenodd(int arr[],int *n);
+    int getElement(int index) const;
+    int size() const;
 
+    void operateArray();
+};
 
-int INSERT_AT_Begin2D(int arr[MAX][MAX], int r, int c);
-int INSERT_AT_End2D(int arr[MAX][MAX], int r, int c);
+class Array2D
+{
+private:
+    int arr[MAX][MAX];
+    int r, c;
 
-void INSERT_AT_Ith_position2D(int arr[MAX][MAX], int r, int c);
-void INSERT_Before_element2D(int arr[MAX][MAX], int r, int c);
-void INSERT_After_element2D(int arr[MAX][MAX] ,int r, int c);
+public:
+    Array2D();
 
-void DELETE_AT_Begin2D(int arr[MAX][MAX], int r, int c);
-void DELETE_AT_End2D(int arr[MAX][MAX], int r, int c);
-void DELETE_AT_ith_position2D(int arr[MAX][MAX], int r, int c);
-void DELETE_Before_element2D(int arr[MAX][MAX], int r, int c);
-void DELETE_After_element2D(int arr[MAX][MAX], int r, int c);
+    void initialize2D(const int values[][3], int rows, int cols);
+    void display2D() const;
+    void update2D();
+    void search2D() const;
+    void reversearray2D();
+    void sort2D();
 
-void display2D(int arr[MAX][MAX], int r, int c);
-void update2D(int arr[MAX][MAX], int r, int c);
-void search2D(int arr[MAX][MAX], int r, int c);
-void reversearray2D(int arr[MAX][MAX], int r, int c);
-void sort2D(int arr[MAX][MAX], int r, int c);
+    void insertRowAtBegin();
+    void insertRowAtEnd();
+    void deleteRowAtBegin();
+    void deleteRowAtEnd();
 
-void displayeven2D(int arr[MAX][MAX], int r, int c);
-void displayodd2D(int arr[MAX][MAX], int r, int c);
-void countevenodd2D(int arr[MAX][MAX], int r, int c);
+    void displayeven2D() const;
+    void displayodd2D() const;
+    void countevenodd2D() const;
+
+    void operate2DArray();
+};
 
 #endif
