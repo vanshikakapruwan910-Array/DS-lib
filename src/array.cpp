@@ -1,397 +1,249 @@
-#include<iostream>
-#include"array.hpp"
 
+#include <iostream>
+#include "array.hpp"
 using namespace std;
 
-void display(int arr[],int *n)
+Array::Array()
 {
-    int i;
-    cout<<"Array: ";
-    for(i=0;i< *n;i++)
-    {
-        cout<<arr[i]<<"\t";
-    }
-    cout<<"\n";
+    n = 0;
 }
 
-void update(int arr[], int *n)
+void Array::initialize(const int values[], int size)
 {
-    int pos,x;
-    cout<<"Enter position to update: ";
-    cin>>pos;
-    if(pos < 1 || pos > *n)
+    if (size < 0 || size > MAX)
     {
-        cout<<"Invalid position\n";
+        cout << "Invalid array size.\n";
         return;
     }
-    cout<<"enter new element: ";
-    cin>>x;
-    arr[pos-1]= x;
+
+    n = size;
+    for (int i = 0; i < n; i++)
+        arr[i] = values[i];
 }
 
-void search(int arr[],int *n)
+void Array::display() const
 {
-    int x,i,found=0;
-    cout<<"Enter element to search: ";
-    cin>>x;
-
-    for(i=0;i< *n;i++)
+    if (n == 0)
     {
-        if(arr[i] == x)
+        cout << "Array is empty.\n";
+        return;
+    }
+
+    cout << "Array: ";
+    for (int i = 0; i < n; i++)
+        cout << arr[i] << " ";
+    cout << endl;
+}
+
+void Array::update()
+{
+    int index, value;
+
+    cout << "Enter index to update (0 to " << n - 1 << "): ";
+    cin >> index;
+
+    if (index < 0 || index >= n)
+    {
+        cout << "Invalid index.\n";
+        return;
+    }
+
+    cout << "Enter new value: ";
+    cin >> value;
+    arr[index] = value;
+}
+
+void Array::search() const
+{
+    int value;
+    cout << "Enter element to search: ";
+    cin >> value;
+
+    for (int i = 0; i < n; i++)
+    {
+        if (arr[i] == value)
         {
-            cout<<"Element found at the position \n"<<i+1;
-            found = 1;
-            break;
+            cout << "Element found at index " << i << ".\n";
+            return;
         }
     }
-    if(found == 0)
-    {
-        cout<<"Element not found\n";
-    }
+
+    cout << "Element not found.\n";
 }
 
-void reversearray(int arr[], int *n)
+void Array::reversearray()
 {
-    int i,temp;
-    cout<<"Reversed array : ";
-    for(i=0;i< *n/2;i++)
+    for (int i = 0; i < n / 2; i++)
     {
-        temp = arr[i];
-        arr[i] = arr[*n-i-1];
-        arr[*n-i-1] = temp;
+        int temp = arr[i];
+        arr[i] = arr[n - 1 - i];
+        arr[n - 1 - i] = temp;
     }
-    cout<<"Array reversed"<<endl;
-    display(arr,n);
 
+    cout << "Array reversed.\n";
 }
 
-void sort(int arr[], int *n)
+void Array::sort()
 {
-    int i,j ,temp,ch;
-    cout<<"1.Ascending Order: ";
-    cout<<"2.Descending Order: ";
-
-    cout<<"\nEnter your choice:";
-    cin>>ch;
-    if(ch == 1)
+    for (int i = 0; i < n - 1; i++)
     {
-        for(i=0;i<(*n);i++)
+        for (int j = 0; j < n - 1 - i; j++)
         {
-            if(ch==1 && arr[i]>arr[i+1])
+            if (arr[j] > arr[j + 1])
             {
-                temp = arr[i];
-                arr[i] =  arr[i+1];
-                arr[i+1] = temp;
+                int temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
             }
         }
     }
-    else
-    {
-        for(i=0;i< *n;i++)
-        {
-            if(ch==2 && arr[i]<arr[i+1])
-            {
-                temp = arr[i];
-                arr[i] =  arr[i+1];
-                arr[i+1] = temp;
-            }
-        }
-    }
-    cout<<"Sorted array: ";
-    display(arr,n);
+
+    cout << "Array sorted in ascending order.\n";
 }
 
-
-
-
-void DELETE_AT_Begin(int arr[], int *n)
+void Array::INSERT_AT_Begin()
 {
-    if (*n <= 0)
+    if (n >= MAX)
     {
-        cout << "Array is empty";
+        cout << "Array is full.\n";
         return;
     }
 
-    for (int i = 0; i < *n - 1; i++)
-    {
-        arr[i] = arr[i + 1];
-    }
-    (*n)--;
+    int value;
+    cout << "Enter value: ";
+    cin >> value;
 
-    cout << "Element deleted from beginning";
-}
-
-void DELETE_AT_End(int arr[], int *n)
-{
-    if (*n <= 0)
-    {
-        cout << "Array is empty";
-        return;
-    }
-
-    (*n)--;
-
-    cout << "Element deleted from end";
-}
-
-void DELETE_AT_ith_position(int arr[], int *n)
-{
-    int pos;
-    if ((*n) <= 0)
-    {
-        cout << "Array is empty";
-        return;
-    }
-    cout << "Enter position: ";
-    cin >> pos;
-    if (pos < 1 || pos > (*n))
-    {
-        cout << "Invalid position"<<endl;
-        return;
-    }
-    for (int i = pos - 1; i < (*n) - 1; i++)
-    {
-        arr[i] = arr[i + 1];
-    }
-    (*n)--;
-    cout << "Element deleted from position " << pos;
-}
-
-void DELETE_Before_element(int arr[], int *n)
-{
-    int e, pos = -1;
-    if ((*n) <= 0)
-    {
-        cout << "Array is empty.";
-        return;
-    }
-    cout << "Enter element to delete: ";
-    cin >> e;
-    for (int i = 0; i < (*n); i++)
-    {
-        if (arr[i] == e)
-        {
-            pos = i;
-            break;
-        }
-    }
-    if (pos == -1)
-    {
-        cout << "Element " << e << " not found";
-        return;
-    }
-    if (pos == 0)
-    {
-        cout << "No element exists before " << e;
-        return;
-    }
-    for (int i = pos - 1; i < (*n)- 1; i++)
-    {
-        arr[i] = arr[i + 1];
-    }
-    (*n)--;
-    cout << "Element before " << e << " deleted";
-}
-
-
-void DELETE_After_element(int arr[], int *n)
-{
-    int e, pos = -1;
-    if ((*n) <= 0)
-    {
-        cout << "Array is empty";
-        return;
-    }
-    cout << "Enter element to delete: ";
-    cin >> e;
-    for (int i = 0; i < (*n); i++)
-    {
-        if (arr[i] == e)
-        {
-            pos = i;
-            break;
-        }
-    }
-    if (pos == -1)
-    {
-        cout << "Element " << e << " not found";
-        return;
-    }
-    if (pos == (*n)- 1)
-    {
-        cout << "No element exists after " << e;
-        return;
-    }
-    for (int i = pos + 1; i < (*n)- 1; i++)
-    {
-        arr[i] = arr[i + 1];
-    }
-    (*n)--;
-    cout << "Element after " << e << " deleted";
-}
-
-
-int INSERT_AT_Begin(int arr[], int *n)
-{
-    int x, i;
-    cout<<"Enter element: ";
-    cin>>x;
-    for(i = (*n); i > 0; i--)
-    {
+    for (int i = n; i > 0; i--)
         arr[i] = arr[i - 1];
-    }
 
-    arr[0] = x;
-
-    (*n)++;
-
-    return *n;
+    arr[0] = value;
+    n++;
 }
 
-
-int INSERT_AT_End(int arr[], int *n)
+void Array::INSERT_AT_End()
 {
-    int x;
-
-    cout<<"Enter element: ";
-    cin>>x;
-
-    arr[*n] = x;
-
-    (*n)++;
-
-    return *n;
-}
-
-void INSERT_AT_Ith_position(int arr[],int *n)
-{
-    int i,pos,ind,x;
-    cout<<"Enter elements: ";
-    for(i=0;i< *n;i++)
+    if (n >= MAX)
     {
-        scanf("%d", &arr[i]);
-    }
-    cout<<"Enter the index you want to add element in: ";
-    cin>>ind;
-    cout<<"Enter value to insert: ";
-    cin>>x;
-    if(ind<0||ind> *n)
-    {
-        cout<<"Invalid position.";
-        return;
-    }
-    for(i= *n;i>ind;i--)
-    {
-        arr[i]= arr[i-1];
-    }
-    arr[ind]= x;
-    (*n)++;
-    cout<<"Final array after insertion: ";
-    for(i=0;i< *n;i++)
-    {
-        printf("%d", arr[i]);
-    }
-}
-
-
-void INSERT_Before_element(int arr[],int *n)
-{
-    int e,x,pos= -1,i;
-    cout<<"Enter the element before which we need to insert:";
-    cin>>e;
-    cout<<"Enter value to insert.";
-    cin>>x;
-    for(i=0;i<*n;i++)
-    {
-        if(arr[i]==e)
-        {
-            pos = i;
-            break;
-        }
-    }
-    if(pos== -1)
-    {
-        cout<<"Element"<<e<<"not found";
-        return;
-    }
-    for(int i = *n; i > pos; i--) {
-        arr[i] = arr[i-1];
-    }
-
-    arr[pos] = x;
-    (*n)++;
-    cout<<"Inserted "<<x<<"before"<<e;
-}
-
-
-void INSERT_After_element(int arr[], int *n)
-{
-    int e, x, pos = -1;
-    cout<<"Enter element after which to insert: ";
-    cin>>e;
-    cout<<"Enter value to insert: ";
-    cin>>x;
-
-    for(int i = 0; i < *n; i++) {
-        if(arr[i] == e) {
-            pos = i;
-            break;
-        }
-    }
-
-    if(pos == -1) {
-        cout<<"Element"<<e<<"not found!";
+        cout << "Array is full.\n";
         return;
     }
 
-    // shift from pos+1
-    for(int i = *n; i > pos+1; i--) {
-        arr[i] = arr[i-1];
-    }
-
-    arr[pos+1] = x;
-    (*n)++;
-    cout<<"Inserted"<<x<<"after"<<e;
+    cout << "Enter value: ";
+    cin >> arr[n];
+    n++;
 }
 
-
-void displayeven(int arr[], int *n)
+void Array::DELETE_AT_Begin()
 {
-    int i;
-    cout<<"Even elements: ";
-    for(i=0;i< (*n);i++)
+    if (n == 0)
     {
-        if(arr[i]%2==0)
-        {
-            cin>>arr[i];
-        }
+        cout << "Array is empty.\n";
+        return;
     }
+
+    for (int i = 0; i < n - 1; i++)
+        arr[i] = arr[i + 1];
+
+    n--;
 }
 
-
-void displayodd(int arr[], int *n)
+void Array::DELETE_AT_End()
 {
-    int i;
-    cout<<"Odd elements: ";
-    for(i=0;i< *n;i++)
+    if (n == 0)
     {
-        if(arr[i]%2!=0)
-        {
-            cout<<arr[i];
-        }
+        cout << "Array is empty.\n";
+        return;
     }
+
+    n--;
 }
 
-void countevenodd(int arr[], int *n)
+void Array::displayeven() const
 {
-    int i , even=0,odd=0;
-    for(i=0;i< *n;i++)
+    cout << "Even elements: ";
+    for (int i = 0; i < n; i++)
+        if (arr[i] % 2 == 0)
+            cout << arr[i] << " ";
+    cout << endl;
+}
+
+void Array::displayodd() const
+{
+    cout << "Odd elements: ";
+    for (int i = 0; i < n; i++)
+        if (arr[i] % 2 != 0)
+            cout << arr[i] << " ";
+    cout << endl;
+}
+
+void Array::countevenodd() const
+{
+    int even = 0, odd = 0;
+
+    for (int i = 0; i < n; i++)
     {
-        if(arr[i]%2==0)
+        if (arr[i] % 2 == 0)
             even++;
         else
             odd++;
     }
-    cout<<"Number of even elements:"<<even;
-    cout<<"Number of odd elements:"<<odd;
+
+    cout << "Even count: " << even << endl;
+    cout << "Odd count: " << odd << endl;
+}
+
+int Array::getElement(int index) const
+{
+    if (index < 0 || index >= n)
+        return 0;
+
+    return arr[index];
+}
+
+int Array::size() const
+{
+    return n;
+}
+
+void Array::operateArray()
+{
+    int choice;
+
+    do
+    {
+        cout << "\n--- 1D ARRAY MENU ---\n";
+        cout << "1. Display\n";
+        cout << "2. Update\n";
+        cout << "3. Search\n";
+        cout << "4. Reverse\n";
+        cout << "5. Sort\n";
+        cout << "6. Insert at beginning\n";
+        cout << "7. Insert at end\n";
+        cout << "8. Delete from beginning\n";
+        cout << "9. Delete from end\n";
+        cout << "10. Display even elements\n";
+        cout << "11. Display odd elements\n";
+        cout << "12. Count even and odd\n";
+        cout << "0. Back to main menu\n";
+        cout << "Enter choice: ";
+        cin >> choice;
+
+        switch (choice)
+        {
+            case 1: display(); break;
+            case 2: update(); break;
+            case 3: search(); break;
+            case 4: reversearray(); display(); break;
+            case 5: sort(); display(); break;
+            case 6: INSERT_AT_Begin(); display(); break;
+            case 7: INSERT_AT_End(); display(); break;
+            case 8: DELETE_AT_Begin(); display(); break;
+            case 9: DELETE_AT_End(); display(); break;
+            case 10: displayeven(); break;
+            case 11: displayodd(); break;
+            case 12: countevenodd(); break;
+            case 0: break;
+            default: cout << "Invalid choice.\n";
+        }
+    } while (choice != 0);
 }
