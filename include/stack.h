@@ -1,4 +1,3 @@
-<<<<<<< Updated upstream
 #ifndef STACK_H
 #define STACK_H
 #include<iostream>
@@ -17,22 +16,12 @@ class Stack
      int getTop();
      int size();
      
-     void push();
+     void push(int );
      int pop();
      int peek();
      void display();
      void clear();
 };
-void operatestack();
-=======
-#ifndef STACK_H 
-#define STACK_H
-
-int push(int[],int);
-int pop(int[],int);
-void peek(int[],int);
-void display(int[],int);
-int operateStack();
->>>>>>> Stashed changes
+void operateStack();
 
 #endif
