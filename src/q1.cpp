@@ -2,9 +2,9 @@
 #include "q1.h"
 using namespace std;
 
-Queue::Queue(size_t size)
+Queue::Queue()                 
 {
-    _size = size;
+    _size = QUEUE_SIZE;
     arr = new int[_size];
     front = 0;
     rear = -1;
@@ -18,7 +18,7 @@ Queue::~Queue()
 
 bool Queue::isFull()
 {
-    return count == _size;
+    return count == (int)_size;
 }
 
 bool Queue::isEmpty()
@@ -33,6 +33,7 @@ int Queue::getFront()
         cout << "Queue is empty" << endl;
         return -1;
     }
+
     return arr[front];
 }
 
@@ -43,6 +44,7 @@ int Queue::getRear()
         cout << "Queue is empty" << endl;
         return -1;
     }
+
     return arr[rear];
 }
 
@@ -53,6 +55,7 @@ void Queue::enqueue(int data)
         cout << "Queue is full" << endl;
         return;
     }
+
     rear = (rear + 1) % _size;
     arr[rear] = data;
     count++;
@@ -65,8 +68,10 @@ void Queue::dequeue()
         cout << "Queue is empty" << endl;
         return;
     }
+
     front = (front + 1) % _size;
     count--;
+
     if(count == 0)
     {
         front = 0;
@@ -81,6 +86,7 @@ void Queue::enqueueFront(int data)
         cout << "Queue is full" << endl;
         return;
     }
+
     if(isEmpty())
     {
         front = 0;
@@ -90,6 +96,7 @@ void Queue::enqueueFront(int data)
     {
         front = (front + _size - 1) % _size;
     }
+
     arr[front] = data;
     count++;
 }
@@ -101,8 +108,10 @@ void Queue::dequeueRear()
         cout << "Queue is empty" << endl;
         return;
     }
+
     rear = (rear + _size - 1) % _size;
     count--;
+
     if(count == 0)
     {
         front = 0;
@@ -117,26 +126,32 @@ void Queue::sort(bool asc)
         cout << "Queue is empty" << endl;
         return;
     }
+
     int *temp = new int[count];
+
     int i = front;
+
     for(int j = 0; j < count; j++)
     {
         temp[j] = arr[i];
         i = (i + 1) % _size;
     }
+//insertion sorting
     for(int a = 1; a < count; a++)
     {
         int key = temp[a];
         int b = a - 1;
+
         while(b >= 0 &&
              (asc ? temp[b] > key : temp[b] < key))
         {
             temp[b + 1] = temp[b];
             b--;
         }
+
         temp[b + 1] = key;
     }
-    
+
     for(int j = 0; j < count; j++)
     {
         arr[j] = temp[j];
@@ -144,6 +159,7 @@ void Queue::sort(bool asc)
 
     front = 0;
     rear = count - 1;
+
     delete[] temp;
 }
 
@@ -154,20 +170,25 @@ void Queue::display()
         cout << "Queue is empty" << endl;
         return;
     }
+
     int i = front;
+
     cout << "Queue elements: ";
+
     for(int j = 0; j < count; j++)
     {
         cout << arr[i] << " ";
         i = (i + 1) % _size;
     }
+
     cout << endl;
 }
 
 void operateQueue()
 {
-    Queue q(5);
+    Queue q;
     int ch, data;
+
     do
     {
         cout << "\n~~~~~~ QUEUE MENU ~~~~~~" << endl;
@@ -183,9 +204,10 @@ void operateQueue()
         cout << "10. ENQUEUE FRONT" << endl;
         cout << "11. DEQUEUE REAR" << endl;
         cout << "12. EXIT" << endl;
-        
+
         cout << "Enter your choice: ";
         cin >> ch;
+
         switch(ch)
         {
             case 1:
@@ -259,5 +281,6 @@ void operateQueue()
             default:
                 cout << "Invalid choice" << endl;
         }
+
     } while(ch != 12);
 }
