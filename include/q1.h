@@ -1,9 +1,8 @@
 #ifndef QUEUE_H
 #define QUEUE_H
-
 #include <iostream>
+#define QUEUE_SIZE 5
 using namespace std;
-
 class Queue
 {
 private:
@@ -13,7 +12,7 @@ private:
     int count;
 
 public:
-    Queue(size_t size);
+    Queue();
     ~Queue();
 
     bool isFull();
@@ -26,10 +25,9 @@ public:
     void dequeue();
 
     void sort(bool asc); 
-    void enqueueFront(int data);        
-    void dequeueRear();                 
+    void enqueueFront(int data);       
+    void dequeueRear();              
     void display();
 };
 void operateQueue();
-
 #endif
