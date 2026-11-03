@@ -1,7 +1,6 @@
 
 #include <iostream>
 #include<algorithm>
-#include <queue>
 #include "tree.h"
 
 using namespace std;
