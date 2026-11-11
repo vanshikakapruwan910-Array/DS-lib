@@ -1,6 +1,7 @@
 
 #include <iostream>
 #include<algorithm>
+#include <queue>
 #include "tree.h"
 
 using namespace std;
@@ -114,8 +115,6 @@ void BinarySearchTree::inorder() const
     inorderHelper(root);
     cout << endl;
 }
-
-// Preorder Helper
 void BinarySearchTree::preorderHelper(Node* node) const
 {
     if (node == nullptr)
@@ -126,7 +125,6 @@ void BinarySearchTree::preorderHelper(Node* node) const
     preorderHelper(node->right);
 }
 
-// Preorder Traversal
 void BinarySearchTree::preorder() const
 {
     if (root == nullptr)
@@ -139,8 +137,6 @@ void BinarySearchTree::preorder() const
     preorderHelper(root);
     cout << endl;
 }
-
-// Postorder Helper
 void BinarySearchTree::postorderHelper(Node* node) const
 {
     if (node == nullptr)
@@ -272,13 +268,11 @@ int BinarySearchTree::countNodesHelper(Node* node) const
              + countNodesHelper(node->right);
 }
 
-// Count Total Nodes
+
 int BinarySearchTree::countNodes() const
 {
     return countNodesHelper(root);
 }
-
-// Count Leaf Nodes Helper
 int BinarySearchTree::countLeafNodesHelper(Node* node) const
 {
     if (node == nullptr)
@@ -491,7 +485,7 @@ void operateTree()
 
     do
     {
-        cout << "\n========== TREE MENU ==========\n";
+        cout << "~~~~~~~~~~~~~TREE MENU~~~~~~~~~\n";
 
         cout << "1. Insert Node\n";
         cout << "2. Display Tree\n";
@@ -556,8 +550,7 @@ void operateTree()
                 break;
 
             case 9:
-                cout << "Total number of nodes = "
-                     << tree.countNodes() << endl;
+                cout << "Total number of nodes = " << tree.countNodes() << endl;
                 break;
 
             case 10:
