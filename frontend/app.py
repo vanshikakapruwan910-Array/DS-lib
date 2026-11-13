@@ -1,19 +1,18 @@
 
 import streamlit as st
-from collections import deque
 
 st.set_page_config(
     page_title="DSLib",
-    page_icon="🏥",
+    page_icon="✩",
     layout="wide"
 )
 
 st.title("DSLib : Domain-Specific Data Structures")
 st.caption("A C++ data structures library for real-world workflows")
 
-# Keep demo data between Streamlit reruns
+
 if "items" not in st.session_state:
-    st.session_state.items = []
+    st.session_state["items"] = []
 
 if "history" not in st.session_state:
     st.session_state.history = []
@@ -44,27 +43,25 @@ if structure == "Queue":
         if item_id.strip() and item_name.strip():
             if any(
                 item["id"] == item_id.strip()
-                for item in st.session_state.items
+                for item in st.session_state["items"]
             ):
                 st.error("This ID already exists.")
             else:
-                st.session_state.items.append({
+                st.session_state["items"].append({
                     "id": item_id.strip(),
                     "name": item_name.strip()
                 })
-                st.session_state.history.append(
-                    f"Added {item_id.strip()}"
-                )
+                st.session_state.history.append(f"Added {item_id.strip()}")
                 st.success("Record added successfully.")
         else:
-            st.warning("Enter both an ID and a name.")
+            st.warning("Enter valid record.")
 
     col1, col2 = st.columns(2)
 
     with col1:
         if st.button("Serve Next", use_container_width=True):
-            if st.session_state.items:
-                removed = st.session_state.items.pop(0)
+            if st.session_state["items"]:
+                removed = st.session_state["items"].pop(0)
                 st.session_state.history.append(
                     f"Served {removed['id']}"
                 )
@@ -74,9 +71,27 @@ if structure == "Queue":
 
     with col2:
         if st.button("Clear Demo Data", use_container_width=True):
-            st.session_state.items = []
+            st.session_state["items"] = []
             st.session_state.history = []
             st.rerun()
 
-#add from sample.txt here
 
+    st.subheader("Current Queue")
+
+    if st.session_state["items"]:
+        st.dataframe(
+            st.session_state["items"],
+            use_container_width=True,
+            hide_index=True
+        )
+    else:
+        st.write("No records in the queue yet.")
+
+    st.metric(
+        "Records Waiting",
+        len(st.session_state["items"])
+    )
+
+    st.subheader("Recent Activity")
+    for event in reversed(st.session_state.history[-5:]):
+        st.write("•", event)
