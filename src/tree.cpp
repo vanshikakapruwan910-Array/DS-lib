@@ -17,13 +17,9 @@ Tree::~Tree()
     bDeleteTree();
     bPlusDeleteTree();
 }
-
 // Insert Helper
-
 Tree::Node* Tree::insertHelper(Node* node, int value)
-
 {
-
     if (node == nullptr)
         return new Node(value);
     if (value < node->data)
@@ -33,209 +29,93 @@ Tree::Node* Tree::insertHelper(Node* node, int value)
     else
         cout << "Duplicate values are not inserted!\n";
     return node;
-
 }
-
-
-
 // Insert Node
-
 void Tree::insertNode(int value)
-
 {
     Node* current = bstRoot;
     while (current != nullptr)
     {
         if (value == current->data)
-
         {
-
             cout << "Duplicate values are not inserted!\n";
-
             return;
-
         }
-
-
-
         if (value < current->data)
-
             current = current->left;
-
         else
-
             current = current->right;
-
     }
-
-
-
     bstRoot = insertHelper(bstRoot, value);
-
 }
-
-
-
 // Display Helper (Tree Structure)
-
 void Tree::displayHelper(Node* node, int space) const
-
 {
-
     if (node == nullptr)
-
         return;
-
-
-
     space += 5;
-
-
-
     displayHelper(node->right, space);
-
-
-
     cout << endl;
-
-
-
     for (int i = 5; i < space; i++)
-
         cout << " ";
-
-
-
     cout << node->data << endl;
-
-
-
     displayHelper(node->left, space);
-
 }
-
-
-
 // Display Tree
-
 void Tree::displayTree() const
-
 {
-
     if (bstRoot == nullptr)
-
     {
-
         cout << "Tree is empty!\n";
-
         return;
-
     }
-
-
-
     cout << "\nTree Structure:\n";
-
     displayHelper(bstRoot, 0);
-
 }
-
-
-
 // Inorder Helper
-
 void Tree::inorderHelper(Node* node) const
-
 {
-
     if (node == nullptr)
-
         return;
-
-
-
     inorderHelper(node->left);
-
     cout << node->data << " ";
-
     inorderHelper(node->right);
-
 }
-
-
-
 // Inorder Traversal
-
 void Tree::inorder() const
-
 {
-
     if (bstRoot == nullptr)
-
     {
-
         cout << "Tree is empty!\n";
-
         return;
-
     }
-
-
-
     cout << "Inorder Traversal: ";
-
     inorderHelper(bstRoot);
-
     cout << endl;
-
 }
 
 void Tree::preorderHelper(Node* node) const
-
 {
-
     if (node == nullptr)
-
         return;
-
-
-
     cout << node->data << " ";
-
     preorderHelper(node->left);
-
     preorderHelper(node->right);
-
 }
 
-
-
 void Tree::preorder() const
-
 {
-
     if (bstRoot == nullptr)
-
     {
-
         cout << "Tree is empty!\n";
-
         return;
-
     }
-
-
-
     cout << "Preorder Traversal: ";
-
     preorderHelper(bstRoot);
-
     cout << endl;
-
 }
 
 void Tree::postorderHelper(Node* node) const
-
 {
     if (node == nullptr)
         return;
@@ -243,30 +123,19 @@ void Tree::postorderHelper(Node* node) const
     postorderHelper(node->right);
     cout << node->data << " ";
 }
-
-
-
 // Postorder Traversal
-
 void Tree::postorder() const
-
 {
-
     if (bstRoot == nullptr)
     {
         cout << "Tree is empty!\n";
         return;
     }
-
     cout << "Postorder Traversal: ";
     postorderHelper(bstRoot);
     cout << endl;
 }
-
-
-
 // Breadth First Search
-
 void Tree::BFS() const
 {
     if (bstRoot == nullptr)
@@ -274,14 +143,12 @@ void Tree::BFS() const
         cout << "Tree is empty!\n";
         return;
     }
-
-
-
     queue<Node*> q;
     q.push(bstRoot);
     cout << "BFS Traversal: ";
     while (!q.empty())
     {
+
         Node* current = q.front();
         q.pop();
         cout << current->data << " ";
@@ -293,372 +160,150 @@ void Tree::BFS() const
     cout << endl;
 }
 
-
-
 // DFS Helper
-
 void Tree::DFSHelper(Node* node) const
-
 {
-
     if (node == nullptr)
-
         return;
-
-
-
     cout << node->data << " ";
-
-
-
     DFSHelper(node->left);
-
     DFSHelper(node->right);
-
 }
-
-
-
 // Depth First Search
-
 void Tree::DFS() const
-
 {
-
     if (bstRoot == nullptr)
-
     {
-
         cout << "Tree is empty!\n";
-
         return;
-
     }
-
-
-
     cout << "DFS Traversal (Preorder): ";
-
     DFSHelper(bstRoot);
-
     cout << endl;
-
 }
-
-
-
 // Check Complete Binary Tree
-
 bool Tree::checkCompleteTree() const
-
 {
-
     if (bstRoot == nullptr)
-
         return true;
-
-
-
     queue<Node*> q;
-
     q.push(bstRoot);
-
-
-
     bool nullFound = false;
-
-
-
     while (!q.empty())
-
     {
-
         Node* current = q.front();
-
         q.pop();
-
-
-
         if (current->left != nullptr)
-
         {
-
             if (nullFound)
-
                 return false;
-
-
-
             q.push(current->left);
-
         }
-
         else
-
             nullFound = true;
-
-
-
         if (current->right != nullptr)
-
         {
-
             if (nullFound)
-
                 return false;
-
-
-
             q.push(current->right);
-
         }
-
         else
-
             nullFound = true;
-
     }
-
-
-
     return true;
-
 }
-
-
-
 // Count Nodes Helper
-
 int Tree::countNodesHelper(Node* node) const
-
 {
-
     if (node == nullptr)
-
         return 0;
-
-
-
-    return 1 + countNodesHelper(node->left)
-
-             + countNodesHelper(node->right);
-
+    return 1 + countNodesHelper(node->left)+ countNodesHelper(node->right);
 }
-
-
-
-
 
 int Tree::countNodes() const
-
 {
-
     return countNodesHelper(bstRoot);
-
 }
 
 int Tree::countLeafNodesHelper(Node* node) const
-
 {
-
     if (node == nullptr)
-
         return 0;
-
-
-
     if (node->left == nullptr && node->right == nullptr)
-
         return 1;
-
-
-
-    return countLeafNodesHelper(node->left)
-
-         + countLeafNodesHelper(node->right);
-
+    return countLeafNodesHelper(node->left)+ countLeafNodesHelper(node->right);
 }
-
-
-
 // Count Leaf Nodes
-
 int Tree::countLeafNodes() const
-
 {
-
     return countLeafNodesHelper(bstRoot);
-
 }
-
-
-
 // Find Highest Node
-
 bool Tree::findHighest(int& answer) const
-
 {
-
     if (bstRoot == nullptr)
-
         return false;
-
-
-
     Node* current = bstRoot;
-
-
-
     while (current->right != nullptr)
-
         current = current->right;
-
-
-
     answer = current->data;
-
-
-
     return true;
-
 }
-
-
 
 // Find Second Highest Node
-
 bool Tree::findSecondHighest(int& answer) const
-
 {
-
     if (bstRoot == nullptr)
-
         return false;
-
-
-
     Node* current = bstRoot;
-
     Node* parent = nullptr;
-
-
-
     while (current->right != nullptr)
-
     {
-
         parent = current;
-
         current = current->right;
-
     }
-
-
-
     if (current->left != nullptr)
-
     {
-
         current = current->left;
-
-
-
         while (current->right != nullptr)
-
             current = current->right;
-
-
-
         answer = current->data;
-
         return true;
-
     }
-
-
-
     if (parent != nullptr)
-
     {
-
         answer = parent->data;
-
         return true;
-
     }
-
-
-
     return false;
-
 }
-
-
-
 // Display Nodes Having Common Parent
-
 void Tree::displayCommonParentHelper(Node* node) const
-
 {
-
     if (node == nullptr)
-
         return;
-
-
-
     if (node->left != nullptr && node->right != nullptr)
-
     {
-
-        cout << node->left->data << " and "
-
-             << node->right->data
-
-             << " have common parent " << node->data << endl;
-
+        cout << node->left->data << " and "<< node->right->data<< " have common parent " << node->data << endl;
     }
-
-
-
     displayCommonParentHelper(node->left);
-
     displayCommonParentHelper(node->right);
-
 }
-
-
 
 // Display Common Parent Nodes
-
 void Tree::displayCommonParentNodes() const
-
 {
-
     if (bstRoot == nullptr)
-
     {
-
         cout << "Tree is empty!\n";
-
         return;
-
     }
-
-
-
     cout << "Nodes having a common parent:\n";
-
     displayCommonParentHelper(bstRoot);
-
 }
 
-
-
 // Count Nodes Having a Sibling
-
 int Tree::countNodesWithSiblingHelper(Node* node) const
-
 {
 
     if (node == nullptr)
@@ -1709,6 +1354,26 @@ void Tree::insertNonFull(Node* node, int value)
 
 
 
+// Convert the current BST into a B-Tree.
+// The BST remains unchanged; values are copied in sorted order.
+void Tree::convertToB()
+{
+    vector<int> values = toVector();
+
+    // Replace any previously built B-Tree.
+    bDeleteTree();
+
+    for (int value : values)
+    {
+        bInsertNode(value);
+    }
+
+    if (values.empty())
+        cout << "BST is empty. No values were converted to B-Tree!\n";
+    else
+        cout << "BST successfully converted into B-Tree!\n";
+}
+
 void Tree::bInsertNode(int value)
 
 {
@@ -1959,358 +1624,199 @@ bool Tree::bPlusInsertHelper(Node* node, int value, int& upKey, Node*& newChild)
     if (node->isLeaf)
 
     {
-
         vector<int>::iterator pos = lower_bound(node->keys.begin(), node->keys.end(), value);
-
-
-
         if (pos != node->keys.end() && *pos == value)
-
             return false;   // duplicate
-
-
-
         node->keys.insert(pos, value);
-
-
-
         if ((int)node->keys.size() <= BPLUS_MAX_KEYS)
-
             return false;
-
-
-
         int mid = (int)node->keys.size() / 2;
-
-
-
         Node* sibling = new Node(true);
-
         sibling->keys.assign(node->keys.begin() + mid, node->keys.end());
-
         node->keys.resize(mid);
-
-
-
         sibling->next = node->next;
-
         node->next = sibling;
-
-
-
         upKey = sibling->keys[0];   // B+ tree: key is copied up, stays in the leaf
-
         newChild = sibling;
-
         return true;
-
     }
-
-
-
     int i = upper_bound(node->keys.begin(), node->keys.end(), value) - node->keys.begin();
-
-
-
     int childUp = 0;
-
     Node* childNew = nullptr;
-
-
-
     if (!bPlusInsertHelper(node->children[i], value, childUp, childNew))
-
         return false;
-
-
-
     node->keys.insert(node->keys.begin() + i, childUp);
-
     node->children.insert(node->children.begin() + i + 1, childNew);
-
-
-
     if ((int)node->keys.size() <= BPLUS_MAX_KEYS)
-
         return false;
-
-
-
     int mid = (int)node->keys.size() / 2;
-
-
-
     Node* sibling = new Node(false);
-
     sibling->keys.assign(node->keys.begin() + mid + 1, node->keys.end());
-
     sibling->children.assign(node->children.begin() + mid + 1, node->children.end());
-
-
-
     upKey = node->keys[mid];   // internal split: key is moved up
-
-
-
     node->keys.resize(mid);
-
     node->children.resize(mid + 1);
-
-
-
     newChild = sibling;
-
     return true;
-
 }
 
-
+// Convert the current BST into a B+ Tree.
+// The BST remains unchanged; values are copied in sorted order.
+void Tree::convertToBPlus()
+{
+    vector<int> values = toVector();
+    // Replace any previously built B+ Tree.
+    bPlusDeleteTree();
+    for (int value : values)
+    {
+        bPlusInsertNode(value);
+    }
+    if (values.empty())
+        cout << "BST is empty. No values were converted to B+ Tree!\n";
+    else
+        cout << "BST successfully converted into B+ Tree!\n";
+}
 
 void Tree::bPlusInsertNode(int value)
-
 {
-
     if (bPlusRoot == nullptr)
-
     {
-
         bPlusRoot = new Node(true);
-
         bPlusRoot->keys.push_back(value);
-
         return;
-
     }
-
-
-
     int upKey = 0;
-
     Node* newChild = nullptr;
-
-
-
     if (bPlusInsertHelper(bPlusRoot, value, upKey, newChild))
-
     {
-
         Node* newRoot = new Node(false);
-
         newRoot->keys.push_back(upKey);
-
         newRoot->children.push_back(bPlusRoot);
-
         newRoot->children.push_back(newChild);
-
         bPlusRoot = newRoot;
-
     }
-
 }
 
-
-
 void Tree::bPlusDisplayHelper(Node* node, int level) const
-
 {
-
     if (node == nullptr)
-
         return;
-
-
-
     for (int i = 0; i < level * 6; i++)
-
         cout << " ";
-
-
-
     cout << (node->isLeaf ? "(leaf) [" : "[");
-
     for (size_t i = 0; i < node->keys.size(); i++)
-
     {
-
         if (i > 0)
-
             cout << " | ";
-
         cout << node->keys[i];
-
     }
-
     cout << "]" << endl;
-
-
-
     if (!node->isLeaf)
     {
         for (size_t i = 0; i < node->children.size(); i++)
             bPlusDisplayHelper(node->children[i], level + 1);
     }
-
 }
 
 void Tree::bPlusDisplayTree() const
 {
-
     if (bPlusRoot == nullptr)
     {
         cout << "B+ Tree is empty!\n";
         return;
     }
-
-
-
     cout << "\nB+ Tree Structure (max " << BPLUS_MAX_KEYS << " keys per node):\n";
-
     bPlusDisplayHelper(bPlusRoot, 0);
-
 }
-
-
-
 // Walk the leaf chain (this is what makes B+ trees good for range scans)
-
 void Tree::bPlusDisplayLeaves() const
-
 {
-
     if (bPlusRoot == nullptr)
-
         return;
-
-
-
     Node* current = bPlusRoot;
-
-
-
     while (!current->isLeaf)
-
         current = current->children[0];
-
-
-
     cout << "Leaf chain: ";
-
-
-
     while (current != nullptr)
-
     {
-
         cout << "[";
-
         for (size_t i = 0; i < current->keys.size(); i++)
-
         {
-
             if (i > 0)
-
                 cout << " ";
-
             cout << current->keys[i];
-
         }
-
         cout << "]";
-
-
-
         if (current->next != nullptr)
-
             cout << " -> ";
-
-
-
         current = current->next;
-
     }
-
-
-
     cout << endl;
-
 }
-
-
 
 int Tree::bPlusHeight() const
-
 {
-
     int h = 0;
-
     Node* current = bPlusRoot;
-
-
-
     while (current != nullptr)
-
     {
-
         h++;
-
         if (current->isLeaf)
-
             break;
-
         current = current->children[0];
-
     }
-
-
-
     return h;
-
 }
-
-
 
 // Do NOT follow 'next' here, or leaves would be deleted twice
-
 void Tree::bPlusDeleteTreeHelper(Node* node)
-
 {
-
     if (node == nullptr)
-
         return;
-
-
-
     if (!node->isLeaf)
-
     {
-
         for (size_t i = 0; i < node->children.size(); i++)
-
             bPlusDeleteTreeHelper(node->children[i]);
-
     }
-
-
-
     delete node;
-
 }
 
-
-
 void Tree::bPlusDeleteTree()
-
 {
-
     bPlusDeleteTreeHelper(bPlusRoot);
-
     bPlusRoot = nullptr;
 
 }
+// Print each parent-child edge of the BST. A BST is already a connected,
+// acyclic tree, so its existing edges form a spanning tree over its nodes.
+void Tree::displaySpanningEdges(Node* node) const
+{
+    if (node == nullptr)
+        return;
 
+    if (node->left != nullptr)
+        cout << node->data << " -- " << node->left->data << endl;
 
+    if (node->right != nullptr)
+        cout << node->data << " -- " << node->right->data << endl;
 
+    displaySpanningEdges(node->left);
+    displaySpanningEdges(node->right);
+}
+
+void Tree::convertTospan() const
+{
+    if (bstRoot == nullptr)
+    {
+        cout << "BST is empty. Insert nodes first!\n";
+        return;
+    }
+    cout << "\nThe BST is already a spanning tree of its own nodes.\n";
+    cout << "Spanning tree edges (parent -- child):\n";
+    displaySpanningEdges(bstRoot);
+    cout << "Total vertices = " << countNodes() << endl;
+    cout << "Total edges = " << countNodes() - 1 << endl;
+}
 
 void operateTree()
 {
@@ -2339,7 +1845,7 @@ void operateTree()
                      << "13. Count Nodes Having Sibling\n14. Count Leaf Nodes\n15. Height\n"
                      << "16. Count Only-Left-Child Nodes\n17. Search\n18. Delete Entire BST\n"
                      << "19. Delete Node\n20. Delete Left Subtree\n21. Delete Right Subtree\n"
-                     << "22. Delete All Leaves\n0. Back\nChoice: ";
+                     << "22. Delete All Leaves\n23. Convert to Spanning Tree\n0. Back\nChoice: ";
                 cin >> choice;
                 switch (choice)
                 {
@@ -2360,25 +1866,78 @@ void operateTree()
                     case 5: 
                     tree.postorder(); 
                     break;
-                    case 6: tree.BFS(); break;
-                    case 7: tree.DFS(); break;
-                    case 8: cout << (tree.checkCompleteTree() ? "Complete Binary Tree\n" : "Not a Complete Binary Tree\n"); break;
-                    case 9: cout << "Total nodes = " << tree.countNodes() << endl; break;
-                    case 10: if (tree.findHighest(answer)) cout << "Highest = " << answer << endl; else cout << "Tree is empty!\n"; break;
-                    case 11: if (tree.findSecondHighest(answer)) cout << "Second highest = " << answer << endl; else cout << "Second highest does not exist!\n"; break;
-                    case 12: tree.displayCommonParentNodes(); break;
-                    case 13: cout << "Nodes having sibling = " << tree.countNodesWithSibling() << endl; break;
-                    case 14: cout << "Leaf nodes = " << tree.countLeafNodes() << endl; break;
-                    case 15: cout << "Height = " << tree.height() << endl; break;
-                    case 16: cout << "Only-left-child nodes = " << tree.countOnlyLeftChild() << endl; break;
-                    case 17: cout << "Enter value to search: "; cin >> value; tree.searchNode(value); break;
-                    case 18: tree.deleteTree(); cout << "BST deleted.\n"; break;
-                    case 19: cout << "Enter value to delete: "; cin >> value; tree.deleteNode(value); break;
-                    case 20: cout << "Enter parent value: "; cin >> value; tree.deleteLeftSubtree(value); break;
-                    case 21: cout << "Enter parent value: "; cin >> value; tree.deleteRightSubtree(value); break;
-                    case 22: tree.deleteLeafNodes(); break;
-                    case 0: break;
-                    default: cout << "Invalid choice!\n";
+                    case 6: 
+                    tree.BFS(); 
+                    break;
+                    case 7: 
+                    tree.DFS(); 
+                    break;
+                    case 8: 
+                    cout << (tree.checkCompleteTree() ? "Complete Binary Tree\n" : "Not a Complete Binary Tree\n"); 
+                    break;
+                    case 9: 
+                    cout << "Total nodes = " << tree.countNodes() << endl; 
+                    break;
+                    case 10: 
+                    if (tree.findHighest(answer)) 
+                       cout << "Highest = " << answer << endl; 
+                    else 
+                       cout << "Tree is empty!\n"; 
+                    break;
+                    case 11: 
+                    if (tree.findSecondHighest(answer)) 
+                       cout << "Second highest = " << answer << endl; 
+                    else 
+                       cout << "Second highest does not exist!\n"; 
+                    break;
+                    case 12: 
+                    tree.displayCommonParentNodes(); 
+                    break;
+                    case 13: 
+                    cout << "Nodes having sibling = " << tree.countNodesWithSibling() << endl; 
+                    break;
+                    case 14: 
+                    cout << "Leaf nodes = " << tree.countLeafNodes() << endl; 
+                    break;
+                    case 15: 
+                    cout << "Height = " << tree.height() << endl; 
+                    break;
+                    case 16: 
+                    cout << "Only-left-child nodes = " << tree.countOnlyLeftChild() << endl; 
+                    break;
+                    case 17: 
+                    cout << "Enter value to search: "; 
+                    cin >> value; tree.searchNode(value); 
+                    break;
+                    case 18: 
+                    tree.deleteTree(); 
+                    cout << "BST deleted.\n"; 
+                    break;
+                    case 19: 
+                    cout << "Enter value to delete: "; 
+                    cin >> value; 
+                    tree.deleteNode(value); 
+                    break;
+                    case 20: 
+                    cout << "Enter parent value: "; 
+                    cin >> value; 
+                    tree.deleteLeftSubtree(value); 
+                    break;
+                    case 21:
+                     cout << "Enter parent value: "; 
+                     cin >> value; 
+                     tree.deleteRightSubtree(value); 
+                     break;
+                    case 22: 
+                    tree.deleteLeafNodes(); 
+                    break;
+                    case 23: 
+                    tree.convertTospan(); 
+                    break;
+                    case 0: 
+                    break;
+                    default: 
+                    cout << "Invalid choice!\n";
                 }
             } while (choice != 0);
         }
@@ -2390,13 +1949,28 @@ void operateTree()
                 cin >> choice;
                 switch (choice)
                 {
-                    case 1: cout << "Enter value: "; cin >> value; tree.avlInsertNode(value); break;
-                    case 2: tree.avlDisplayTree(); break;
-                    case 3: tree.avlInorder(); break;
-                    case 4: cout << "AVL height = " << tree.avlHeight() << endl; break;
-                    case 5: tree.avlDeleteTree(); cout << "AVL Tree deleted.\n"; break;
-                    case 0: break;
-                    default: cout << "Invalid choice!\n";
+                    case 1: 
+                    cout << "Enter value: "; 
+                    cin >> value; 
+                    tree.avlInsertNode(value); 
+                    break;
+                    case 2: 
+                    tree.avlDisplayTree(); 
+                    break;
+                    case 3: 
+                    tree.avlInorder(); 
+                    break;
+                    case 4: 
+                    cout << "AVL height = " << tree.avlHeight() << endl; 
+                    break;
+                    case 5: 
+                    tree.avlDeleteTree(); 
+                    cout << "AVL Tree deleted.\n"; 
+                    break;
+                    case 0: 
+                    break;
+                    default: 
+                    cout << "Invalid choice!\n";
                 }
             } while (choice != 0);
         }
@@ -2408,13 +1982,28 @@ void operateTree()
                 cin >> choice;
                 switch (choice)
                 {
-                    case 1: cout << "Enter value: "; cin >> value; tree.bInsertNode(value); break;
-                    case 2: tree.bDisplayTree(); break;
-                    case 3: tree.bInorder(); break;
-                    case 4: cout << "B-Tree height = " << tree.bHeight() << endl; break;
-                    case 5: tree.bDeleteTree(); cout << "B-Tree deleted.\n"; break;
-                    case 0: break;
-                    default: cout << "Invalid choice!\n";
+                    case 1: 
+                    cout << "Enter value: "; 
+                    cin >> value; 
+                    tree.bInsertNode(value); 
+                    break;
+                    case 2: 
+                    tree.bDisplayTree(); 
+                    break;
+                    case 3: 
+                    tree.bInorder(); 
+                    break;
+                    case 4: 
+                    cout << "B-Tree height = " << tree.bHeight() << endl; 
+                    break;
+                    case 5: 
+                    tree.bDeleteTree(); 
+                    cout << "B-Tree deleted.\n"; 
+                    break;
+                    case 0: 
+                    break;
+                    default: 
+                    cout << "Invalid choice!\n";
                 }
             } while (choice != 0);
         }
@@ -2426,18 +2015,32 @@ void operateTree()
                 cin >> choice;
                 switch (choice)
                 {
-                    case 1: cout << "Enter value: "; cin >> value; tree.bPlusInsertNode(value); break;
-                    case 2: tree.bPlusDisplayTree(); break;
-                    case 3: tree.bPlusDisplayLeaves(); break;
-                    case 4: cout << "B+ Tree height = " << tree.bPlusHeight() << endl; break;
-                    case 5: tree.bPlusDeleteTree(); cout << "B+ Tree deleted.\n"; break;
-                    case 0: break;
-                    default: cout << "Invalid choice!\n";
+                    case 1: 
+                    cout << "Enter value: "; 
+                    cin >> value; 
+                    tree.bPlusInsertNode(value); 
+                    break;
+                    case 2: 
+                    tree.bPlusDisplayTree(); 
+                    break;
+                    case 3: 
+                    tree.bPlusDisplayLeaves(); 
+                    break;
+                    case 4: 
+                    cout << "B+ Tree height = " << tree.bPlusHeight() << endl; 
+                    break;
+                    case 5: 
+                    tree.bPlusDeleteTree(); 
+                    cout << "B+ Tree deleted.\n"; 
+                    break;
+                    case 0: 
+                    break;
+                    default: 
+                    cout << "Invalid choice!\n";
                 }
             } while (choice != 0);
         }
         else if (mainChoice != 0)
             cout << "Invalid choice!\n";
-
     } while (mainChoice != 0);
 }
