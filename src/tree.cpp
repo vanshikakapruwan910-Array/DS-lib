@@ -305,766 +305,315 @@ void Tree::displayCommonParentNodes() const
 // Count Nodes Having a Sibling
 int Tree::countNodesWithSiblingHelper(Node* node) const
 {
-
     if (node == nullptr)
-
         return 0;
-
-
-
     if (node->left != nullptr && node->right != nullptr)
-
     {
-
-        return 2
-
-             + countNodesWithSiblingHelper(node->left)
-
-             + countNodesWithSiblingHelper(node->right);
-
+        return 2+ countNodesWithSiblingHelper(node->left)+ countNodesWithSiblingHelper(node->right);
     }
-
-
-
-    return countNodesWithSiblingHelper(node->left)
-
-         + countNodesWithSiblingHelper(node->right);
-
+    return countNodesWithSiblingHelper(node->left)+ countNodesWithSiblingHelper(node->right);
 }
-
-
 
 // Count Nodes Having Common Parent
-
 int Tree::countNodesWithSibling() const
-
 {
-
     return countNodesWithSiblingHelper(bstRoot);
-
 }
-
-
 
 // Height Helper
 
 int Tree::heightHelper(Node* node) const
-
 {
-
     if (node == nullptr)
-
         return 0;
-
-
-
     int leftHeight = heightHelper(node->left);
-
     int rightHeight = heightHelper(node->right);
-
-
-
     return 1 + max(leftHeight, rightHeight);
-
 }
-
-
 
 // Height of Tree
-
 int Tree::height() const
-
 {
-
     return heightHelper(bstRoot);
-
 }
-
-
 
 // Count Nodes Having Only Left Child
-
 int Tree::countOnlyLeftChildHelper(Node* node) const
-
 {
-
     if (node == nullptr)
-
         return 0;
-
-
-
     if (node->left != nullptr && node->right == nullptr)
-
     {
-
-        return 1
-
-             + countOnlyLeftChildHelper(node->left)
-
-             + countOnlyLeftChildHelper(node->right);
-
+        return 1+ countOnlyLeftChildHelper(node->left)+ countOnlyLeftChildHelper(node->right);
     }
-
-
-
-    return countOnlyLeftChildHelper(node->left)
-
-         + countOnlyLeftChildHelper(node->right);
-
+    return countOnlyLeftChildHelper(node->left)+ countOnlyLeftChildHelper(node->right);
 }
-
-
 
 // Count Only Left Child Nodes
-
 int Tree::countOnlyLeftChild() const
-
 {
-
     return countOnlyLeftChildHelper(bstRoot);
-
 }
-
-
 
 // Search Node
-
 void Tree::searchNode(int value) const
-
 {
-
     Node* current = bstRoot;
-
-
-
     while (current != nullptr)
-
     {
-
         if (current->data == value)
-
         {
-
             cout << "Node found!\n";
-
             return;
-
         }
-
-
-
         if (value < current->data)
-
             current = current->left;
-
         else
-
             current = current->right;
-
     }
-
-
-
     cout << "Node not found!\n";
-
 }
-
-
-
 // Delete Tree Helper
-
 void Tree::deleteTreeHelper(Node* node)
-
 {
-
     if (node == nullptr)
-
         return;
-
-
-
     deleteTreeHelper(node->left);
-
     deleteTreeHelper(node->right);
-
-
-
     delete node;
-
 }
-
-
 
 // Delete Complete Tree
-
 void Tree::deleteTree()
-
 {
-
     deleteTreeHelper(bstRoot);
-
     bstRoot = nullptr;
-
 }
-
-
-
 // ====================================================================
 
 //                NEW: BST helpers and delete functions
-
-// ====================================================================
-
-
-
 // Collect values in sorted order
 
 void Tree::collectInorder(Node* node, vector<int>& out) const
-
 {
-
     if (node == nullptr)
-
         return;
-
-
-
     collectInorder(node->left, out);
-
     out.push_back(node->data);
-
     collectInorder(node->right, out);
-
 }
-
-
 
 // All values of the tree as a sorted vector
-
 vector<int> Tree::toVector() const
-
 {
-
     vector<int> values;
-
     collectInorder(bstRoot, values);
-
     return values;
-
 }
-
-
 
 // Find a node by value (nullptr if missing)
-
 Tree::Node* Tree::findNode(int value) const
-
 {
-
     Node* current = bstRoot;
-
-
-
     while (current != nullptr && current->data != value)
-
     {
-
         if (value < current->data)
-
             current = current->left;
-
         else
-
             current = current->right;
-
     }
-
-
-
     return current;
-
-}
-
-
-
 // Smallest node of a subtree
-
 Tree::Node* Tree::minNode(Node* node) const
-
 {
-
     while (node != nullptr && node->left != nullptr)
-
         node = node->left;
-
-
-
     return node;
-
 }
-
-
 
 // Delete one node by value (handles leaf, one child, two children)
-
 Tree::Node* Tree::deleteNodeHelper(Node* node, int value, bool& found)
-
 {
-
     if (node == nullptr)
-
         return nullptr;
-
-
-
     if (value < node->data)
-
         node->left = deleteNodeHelper(node->left, value, found);
-
-
-
     else if (value > node->data)
-
         node->right = deleteNodeHelper(node->right, value, found);
-
-
-
     else
-
     {
-
         found = true;
-
-
-
         // No child or only right child
-
         if (node->left == nullptr)
-
         {
-
             Node* temp = node->right;
-
             delete node;
-
             return temp;
-
         }
-
-
-
         // Only left child
-
         if (node->right == nullptr)
-
         {
-
             Node* temp = node->left;
-
             delete node;
-
             return temp;
-
         }
-
-
-
         // Two children: replace with inorder successor
-
         Node* successor = minNode(node->right);
-
         node->data = successor->data;
-
         node->right = deleteNodeHelper(node->right, successor->data, found);
-
     }
-
-
-
     return node;
-
 }
-
-
 
 void Tree::deleteNode(int value)
-
 {
-
     if (bstRoot == nullptr)
-
     {
-
         cout << "Tree is empty!\n";
-
         return;
-
     }
-
-
-
     bool found = false;
-
     bstRoot = deleteNodeHelper(bstRoot, value, found);
-
-
-
     if (found)
-
         cout << "Node " << value << " deleted successfully!\n";
-
     else
-
         cout << "Node not found!\n";
-
 }
 
-
-
 // Delete the left child of a node, together with everything below it
-
 void Tree::deleteLeftSubtree(int value)
-
 {
-
     Node* target = findNode(value);
-
-
-
     if (target == nullptr)
-
     {
-
         cout << "Node not found!\n";
-
         return;
-
     }
-
-
-
     if (target->left == nullptr)
 
     {
-
         cout << "Node " << value << " has no left child!\n";
-
         return;
-
     }
-
-
-
     int removed = countNodesHelper(target->left);
-
     deleteTreeHelper(target->left);
-
     target->left = nullptr;
-
-
-
-    cout << "Left subtree of " << value << " deleted ("
-
-         << removed << " node(s) removed).\n";
-
+    cout << "Left subtree of " << value << " deleted ("<< removed << " node(s) removed).\n";
 }
-
-
 
 // Delete the right child of a node, together with everything below it
-
 void Tree::deleteRightSubtree(int value)
-
 {
-
     Node* target = findNode(value);
-
-
-
     if (target == nullptr)
-
     {
-
         cout << "Node not found!\n";
-
         return;
-
     }
-
-
-
     if (target->right == nullptr)
-
     {
-
         cout << "Node " << value << " has no right child!\n";
-
         return;
-
     }
-
-
-
     int removed = countNodesHelper(target->right);
-
     deleteTreeHelper(target->right);
-
     target->right = nullptr;
-
-
-
-    cout << "Right subtree of " << value << " deleted ("
-
-         << removed << " node(s) removed).\n";
-
+    cout << "Right subtree of " << value << " deleted ("<< removed << " node(s) removed).\n";
 }
-
-
-
 // Delete every leaf node
-
 Tree::Node* Tree::deleteLeafHelper(Node* node, int& count)
-
 {
-
     if (node == nullptr)
-
         return nullptr;
-
-
-
     if (node->left == nullptr && node->right == nullptr)
-
     {
-
         delete node;
-
         count++;
-
         return nullptr;
-
     }
-
-
-
     node->left = deleteLeafHelper(node->left, count);
-
     node->right = deleteLeafHelper(node->right, count);
-
-
-
     return node;
-
 }
-
-
-
 void Tree::deleteLeafNodes()
-
 {
-
     if (bstRoot == nullptr)
-
     {
-
         cout << "Tree is empty!\n";
-
         return;
-
     }
-
-
-
     int count = 0;
-
     bstRoot = deleteLeafHelper(bstRoot, count);
-
-
-
     cout << count << " leaf node(s) deleted successfully!\n";
-
 }
-
-
-
-
 // ====================================================================
 
 //                              AVL TREE
-
-// ====================================================================
-
-
-
 int Tree::getHeight(Node* node) const
-
 {
-
     return node == nullptr ? 0 : node->height;
-
 }
-
-
-
 int Tree::balanceFactor(Node* node) const
-
 {
-
     return node == nullptr ? 0 : getHeight(node->left) - getHeight(node->right);
-
 }
-
-
-
 void Tree::updateHeight(Node* node)
-
 {
-
     node->height = 1 + max(getHeight(node->left), getHeight(node->right));
-
 }
-
-
 
 Tree::Node* Tree::rotateRight(Node* y)
-
 {
-
     Node* x = y->left;
-
     Node* t2 = x->right;
-
-
-
     x->right = y;
-
     y->left = t2;
-
-
-
     updateHeight(y);
-
     updateHeight(x);
-
-
-
     return x;
-
 }
-
-
 
 Tree::Node* Tree::rotateLeft(Node* x)
-
 {
-
     Node* y = x->right;
-
     Node* t2 = y->left;
-
-
-
     y->left = x;
-
     x->right = t2;
-
-
-
     updateHeight(x);
-
     updateHeight(y);
-
-
-
     return y;
-
 }
-
-
 
 Tree::Node* Tree::avlInsertHelper(Node* node, int value)
-
 {
-
     if (node == nullptr)
-
         return new Node(value);
-
-
-
     if (value < node->data)
-
         node->left = avlInsertHelper(node->left, value);
-
     else if (value > node->data)
-
         node->right = avlInsertHelper(node->right, value);
-
     else
-
         return node;   // duplicates ignored
-
-
-
     updateHeight(node);
-
-
-
     int balance = balanceFactor(node);
-
-
-
-    // Left Left
-
     if (balance > 1 && value < node->left->data)
-
         return rotateRight(node);
-
-
-
-    // Right Right
-
     if (balance < -1 && value > node->right->data)
-
         return rotateLeft(node);
-
-
-
-    // Left Right
-
     if (balance > 1 && value > node->left->data)
-
     {
-
         node->left = rotateLeft(node->left);
-
         return rotateRight(node);
-
     }
-
-
 
     // Right Left
-
     if (balance < -1 && value < node->right->data)
-
     {
-
         node->right = rotateRight(node->right);
-
         return rotateLeft(node);
-
     }
-
-
-
     return node;
-
 }
-
-
-
 void Tree::convertToAVL()
 {
     vector<int> values;
@@ -1093,281 +642,123 @@ void Tree::avlInsertNode(int value)
     bstRoot = avlInsertHelper(bstRoot, value);
 }
 
-
-
 void Tree::avlDisplayHelper(Node* node, int space) const
-
 {
-
     if (node == nullptr)
-
         return;
-
-
-
     space += 5;
-
-
-
     avlDisplayHelper(node->right, space);
-
-
-
     cout << endl;
-
-
-
     for (int i = 5; i < space; i++)
-
         cout << " ";
-
-
-
     cout << node->data << endl;
-
-
-
     avlDisplayHelper(node->left, space);
-
 }
-
-
 
 void Tree::avlDisplayTree() const
-
 {
-
     if (bstRoot == nullptr)
-
     {
-
         cout << "AVL Tree is empty!\n";
-
         return;
-
     }
-
-
-
     cout << "\nAVL Tree Structure:\n";
-
     avlDisplayHelper(bstRoot, 0);
-
 }
-
-
 
 void Tree::avlInorderHelper(Node* node) const
-
 {
-
     if (node == nullptr)
-
         return;
-
-
-
     avlInorderHelper(node->left);
-
     cout << node->data << " ";
-
     avlInorderHelper(node->right);
-
 }
-
-
 
 void Tree::avlInorder() const
-
 {
-
     cout << "AVL Inorder Traversal: ";
-
     avlInorderHelper(bstRoot);
-
     cout << endl;
-
 }
-
-
 
 int Tree::avlHeight() const
-
 {
-
     return getHeight(bstRoot);
-
 }
-
-
 
 void Tree::avlDeleteTreeHelper(Node* node)
-
 {
-
     if (node == nullptr)
-
         return;
-
-
-
     avlDeleteTreeHelper(node->left);
-
     avlDeleteTreeHelper(node->right);
-
-
-
     delete node;
-
 }
-
-
 
 void Tree::avlDeleteTree()
-
 {
-
     avlDeleteTreeHelper(bstRoot);
-
     bstRoot = nullptr;
-
 }
-
-
-
-
 // ====================================================================
 
 //                               B-TREE
-
-// ====================================================================
-
-
-
 // Split the full child parent->children[i] into two nodes
 
 void Tree::splitChild(Node* parent, int i)
-
 {
-
     Node* y = parent->children[i];
-
     Node* z = new Node(y->isLeaf);
-
-
-
     int median = y->keys[B_TREE_T - 1];
-
-
-
     z->keys.assign(y->keys.begin() + B_TREE_T, y->keys.end());
-
-
-
     if (!y->isLeaf)
-
     {
-
         z->children.assign(y->children.begin() + B_TREE_T, y->children.end());
-
         y->children.resize(B_TREE_T);
-
     }
-
-
-
     y->keys.resize(B_TREE_T - 1);
-
-
-
     parent->keys.insert(parent->keys.begin() + i, median);
-
     parent->children.insert(parent->children.begin() + i + 1, z);
-
 }
-
-
 
 void Tree::insertNonFull(Node* node, int value)
-
 {
-
     int i = static_cast<int>(node->keys.size()) - 1;
-
-
-
     if (node->isLeaf)
-
     {
-
         node->keys.push_back(value);
-
-
-
         while (i >= 0 && node->keys[i] > value)
-
         {
-
             node->keys[i + 1] = node->keys[i];
-
             i--;
-
         }
-
-
-
         node->keys[i + 1] = value;
-
         return;
-
     }
-
-
-
     while (i >= 0 && node->keys[i] > value)
-
         i--;
-
     i++;
-
-
-
     if (static_cast<int>(node->children[i]->keys.size()) == 2 * B_TREE_T - 1)
-
     {
-
         splitChild(node, i);
-
-
-
         if (value > node->keys[i])
-
             i++;
-
     }
-
-
-
     insertNonFull(node->children[i], value);
-
 }
-
-
 
 // Convert the current BST into a B-Tree.
 // The BST remains unchanged; values are copied in sorted order.
 void Tree::convertToB()
 {
     vector<int> values = toVector();
-
     // Replace any previously built B-Tree.
     bDeleteTree();
-
     for (int value : values)
     {
         bInsertNode(value);
     }
-
     if (values.empty())
         cout << "BST is empty. No values were converted to B-Tree!\n";
     else
@@ -1375,254 +766,116 @@ void Tree::convertToB()
 }
 
 void Tree::bInsertNode(int value)
-
 {
-
     if (bRoot == nullptr)
-
     {
-
         bRoot = new Node(true);
-
         bRoot->keys.push_back(value);
-
         return;
-
     }
-
-
-
     if (static_cast<int>(bRoot->keys.size()) == 2 * B_TREE_T - 1)
-
     {
-
         Node* newRoot = new Node(false);
-
         newRoot->children.push_back(bRoot);
-
         splitChild(newRoot, 0);
-
         bRoot = newRoot;
-
     }
-
-
-
     insertNonFull(bRoot, value);
-
 }
-
-
 
 void Tree::bDisplayHelper(Node* node, int level) const
-
 {
-
     if (node == nullptr)
-
         return;
-
-
-
     for (int i = 0; i < level * 6; i++)
-
         cout << " ";
-
-
-
     cout << "[";
-
     for (size_t i = 0; i < node->keys.size(); i++)
-
     {
-
         if (i > 0)
-
             cout << " | ";
-
         cout << node->keys[i];
-
     }
-
     cout << "]" << endl;
-
-
-
     if (!node->isLeaf)
-
     {
-
         for (size_t i = 0; i < node->children.size(); i++)
-
             bDisplayHelper(node->children[i], level + 1);
-
     }
-
 }
-
-
 
 void Tree::bDisplayTree() const
-
 {
-
     if (bRoot == nullptr)
-
     {
-
         cout << "B-Tree is empty!\n";
-
         return;
-
     }
-
-
-
     cout << "\nB-Tree Structure (min degree " << B_TREE_T << "):\n";
-
     bDisplayHelper(bRoot, 0);
-
 }
-
-
 
 void Tree::bInorderHelper(Node* node) const
-
 {
-
     if (node == nullptr)
-
         return;
-
-
-
     for (size_t i = 0; i < node->keys.size(); i++)
-
     {
-
         if (!node->isLeaf)
-
             bInorderHelper(node->children[i]);
-
-
-
         cout << node->keys[i] << " ";
-
     }
-
-
-
     if (!node->isLeaf)
-
         bInorderHelper(node->children[node->keys.size()]);
-
 }
-
-
 
 void Tree::bInorder() const
-
 {
-
     cout << "B-Tree Inorder Traversal: ";
-
     bInorderHelper(bRoot);
-
     cout << endl;
-
 }
-
-
 
 int Tree::bHeight() const
-
 {
-
     int h = 0;
-
     Node* current = bRoot;
-
-
-
     while (current != nullptr)
-
     {
-
         h++;
-
         if (current->isLeaf)
-
             break;
-
         current = current->children[0];
-
     }
-
-
-
     return h;
-
 }
-
-
 
 void Tree::bDeleteTreeHelper(Node* node)
-
 {
-
     if (node == nullptr)
-
         return;
-
-
-
     if (!node->isLeaf)
-
     {
-
         for (size_t i = 0; i < node->children.size(); i++)
-
             bDeleteTreeHelper(node->children[i]);
-
     }
-
-
-
     delete node;   // vectors free their own memory
-
 }
-
-
 
 void Tree::bDeleteTree()
-
 {
-
     bDeleteTreeHelper(bRoot);
-
     bRoot = nullptr;
-
 }
-
-
-
-
 // ====================================================================
 
 //                              B+ TREE
-
-// ====================================================================
-
-
-
 // Returns true if 'node' was split; then upKey/newChild describe the new sibling
 
+
 bool Tree::bPlusInsertHelper(Node* node, int value, int& upKey, Node*& newChild)
-
 {
-
     if (node->isLeaf)
-
     {
         vector<int>::iterator pos = lower_bound(node->keys.begin(), node->keys.end(), value);
         if (pos != node->keys.end() && *pos == value)
@@ -1728,6 +981,7 @@ void Tree::bPlusDisplayTree() const
     cout << "\nB+ Tree Structure (max " << BPLUS_MAX_KEYS << " keys per node):\n";
     bPlusDisplayHelper(bPlusRoot, 0);
 }
+
 // Walk the leaf chain (this is what makes B+ trees good for range scans)
 void Tree::bPlusDisplayLeaves() const
 {
@@ -1822,7 +1076,6 @@ void operateTree()
 {
     Tree tree;
     int mainChoice, choice, value, answer;
-
     do
     {
         cout << "\n========== TREE MENU ==========\n";
