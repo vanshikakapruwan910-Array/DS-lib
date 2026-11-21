@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <queue>
+#include<tuple>
 #include <vector>
 using namespace std;
 
@@ -121,6 +122,13 @@ public:
     void deleteRightSubtree(int value);
     void deleteLeafNodes();
     void convertTospan() const; // Display the BST as its spanning tree
+
+    // Display MST received from Graph
+    void displayMST(
+    const vector<int>& vertices,
+    const vector<tuple<int, int, int>>& mstEdges,
+    int totalWeight
+    ) const;
 
     // AVL public operations
     void convertToAVL(); // Balance the existing BST using the same nodes/root
