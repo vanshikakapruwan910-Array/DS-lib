@@ -1,8 +1,10 @@
 #ifndef GRAPH_H
 #define GRAPH_H
+
 #include <iostream>
 #include <vector>
 #include <queue>
+#include <tuple>
 #include <algorithm>
 using namespace std;
 
@@ -32,6 +34,7 @@ private:
     // Encapsulation
     vector<int> vertices;
     vector<vector<int>> adj;
+    vector<tuple<int, int, int>> weightedEdges;
     // Private helper functions
     int findIndex(int v) const;
     bool edgeExists(int u, int v) const;
@@ -40,6 +43,10 @@ private:
 public:
     UndirectedGraph();
     // Graph operations
+    void addWeightedEdge(int u, int v, int weight);
+    vector<tuple<int, int, int>> minimumSpanningTree() const;
+    vector<int> getVertices() const;
+
     void createGraph() override;
     void addVertex(int v) override;
     void addEdge(int u, int v) override;
