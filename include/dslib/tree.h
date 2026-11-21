@@ -9,6 +9,8 @@ using namespace std;
 class Tree
 {
 private:
+    // Common node structure used by BST, AVL, B-Tree and B+ Tree.
+    // Each tree uses only the fields relevant to its structure.
     struct Node
     {
         // BST / AVL fields
@@ -59,6 +61,7 @@ private:
     void displayCommonParentHelper(Node* node) const;
     void deleteTreeHelper(Node* node);
     void collectInorder(Node* node, vector<int>& out) const;
+    void displaySpanningEdges(Node* node) const;
     Node* findNode(int value) const;
     Node* minNode(Node* node) const;
     Node* deleteNodeHelper(Node* node, int value, bool& found);
@@ -86,7 +89,6 @@ private:
     bool bPlusInsertHelper(Node* node, int value, int& upKey, Node*& newChild);
     void bPlusDisplayHelper(Node* node, int level) const;
     void bPlusDeleteTreeHelper(Node* node);
-    
 
 public:
     Tree();
@@ -118,6 +120,7 @@ public:
     void deleteLeftSubtree(int value);
     void deleteRightSubtree(int value);
     void deleteLeafNodes();
+    void convertTospan() const; // Display the BST as its spanning tree
 
     // AVL public operations
     void convertToAVL(); // Balance the existing BST using the same nodes/root
@@ -128,6 +131,7 @@ public:
     void avlDeleteTree();
 
     // B-Tree public operations
+    void convertToB();
     void bInsertNode(int value);
     void bDisplayTree() const;
     void bInorder() const;
@@ -135,6 +139,7 @@ public:
     void bDeleteTree();
 
     // B+ Tree public operations
+    void convertToBPlus();
     void bPlusInsertNode(int value);
     void bPlusDisplayTree() const;
     void bPlusDisplayLeaves() const;
