@@ -423,6 +423,7 @@ Tree::Node* Tree::findNode(int value) const
             current = current->right;
     }
     return current;
+}
 // Smallest node of a subtree
 Tree::Node* Tree::minNode(Node* node) const
 {
