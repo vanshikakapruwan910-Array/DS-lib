@@ -1075,75 +1075,61 @@ void Tree::convertTospan() const
 
 void Tree::displayMST(
     const vector<int>& vertices,
-    const vector<tuple<int, int, int>>& mstEdges) const
+    const vector<tuple<int, int, int>>& mstEdges,
+    int totalWeight
+) const
 {
+    cout << "\n========== MINIMUM SPANNING TREE ==========\n";
+
     if (vertices.empty())
     {
         cout << "Graph is empty!\n";
         return;
     }
 
-    if (mstEdges.size() != vertices.size() - 1)
+    cout << "\nMST Edges:\n";
+
+    for (const auto& edge : mstEdges)
     {
-        cout << "MST does not exist. Graph is disconnected!\n";
-        return;
+        cout << get<0>(edge) << " -- "
+             << get<1>(edge)
+             << " (Weight: " << get<2>(edge) << ")\n";
     }
 
-    vector<vector<pair<int, int>>> adj(vertices.size());
+    cout << "\nTotal MST Weight = " << totalWeight << endl;
 
-    for (auto edge : mstEdges)
+    vector<vector<int>> mst(vertices.size());
+
+    for (const auto& edge : mstEdges)
     {
         int u = get<0>(edge);
         int v = get<1>(edge);
-        int weight = get<2>(edge);
 
-        int i = find(vertices.begin(), vertices.end(), u) - vertices.begin();
-        int j = find(vertices.begin(), vertices.end(), v) - vertices.begin();
+        int i = find(vertices.begin(), vertices.end(), u)
+                - vertices.begin();
 
-        adj[i].push_back({j, weight});
-        adj[j].push_back({i, weight});
+        int j = find(vertices.begin(), vertices.end(), v)
+                - vertices.begin();
+
+        mst[i].push_back(v);
+        mst[j].push_back(u);
     }
 
-    vector<bool> visited(vertices.size(), false);
+    cout << "\nMST Tree Structure:\n";
 
-    cout << "\n========== MINIMUM SPANNING TREE ==========\n";
-
-    auto show = [&](auto&& self, int index, int depth) -> void
+    for (int i = 0; i < vertices.size(); i++)
     {
-        visited[index] = true;
+        cout << vertices[i] << " -> ";
 
-        for (int i = 0; i < depth; i++)
-            cout << "    ";
+        for (int x : mst[i])
+            cout << x << " ";
 
-        cout << vertices[index] << endl;
+        cout << endl;
+    }
 
-        for (auto child : adj[index])
-        {
-            int next = child.first;
-            int weight = child.second;
-
-            if (!visited[next])
-            {
-                for (int i = 0; i < depth + 1; i++)
-                    cout << "    ";
-
-                cout << "|-- " << vertices[next]
-                     << " (Weight: " << weight << ")\n";
-
-                self(self, next, depth + 1);
-            }
-        }
-    };
-
-    show(show, 0, 0);
-
-    int totalWeight = 0;
-
-    for (auto edge : mstEdges)
-        totalWeight += get<2>(edge);
-
-    cout << "\nTotal MST Weight = " << totalWeight << endl;
+    cout << "===========================================\n";
 }
+
 void operateTree()
 {
     Tree tree;
@@ -1155,7 +1141,6 @@ void operateTree()
         cout << "2. AVL Tree\n";
         cout << "3. B-Tree\n";
         cout << "4. B+ Tree\n";
-        cout<< "5.  Graph - Create Graph and Display MST\n";
         cout << "0. Back to Main Menu\n";
         cout << "Enter choice: ";
         cin >> mainChoice;
@@ -1366,63 +1351,6 @@ void operateTree()
                 }
             } while (choice != 0);
         }
-        else if (mainChoice == 5)
-        {
-                UndirectedGraph graph;
-            
-                int n, e, u, v, w;
-            
-                cout << "\nEnter number of vertices: ";
-                cin >> n;
-            
-                if (n <= 0)
-                {
-                    cout << "Invalid number of vertices!\n";
-                    continue;
-                }
-            
-                // Create vertices
-                for (int i = 0; i < n; i++)
-                {
-                    int vertex;
-            
-                    cout << "Enter vertex " << i + 1 << ": ";
-                    cin >> vertex;
-            
-                    graph.addVertex(vertex);
-                }
-            
-                // Enter weighted edges
-                cout << "\nEnter number of edges: ";
-                cin >> e;
-            
-                for (int i = 0; i < e; i++)
-                {
-                    cout << "\nEnter source vertex: ";
-                    cin >> u;
-            
-                    cout << "Enter destination vertex: ";
-                    cin >> v;
-            
-                    cout << "Enter edge weight: ";
-                    cin >> w;
-            
-                    graph.addWeightedEdge(u, v, w);
-                }
-            
-                // Display original graph
-                cout << "\nOriginal Graph:\n";
-                graph.displayGraph();
-            
-                // Calculate Minimum Spanning Tree
-                vector<tuple<int, int, int>> mst =
-                    graph.minimumSpanningTree();
-            
-                // Pass MST from Graph to Tree
-                cout << "\nDisplaying MST using Tree Module:\n";
-            
-                tree.displayMST(graph.getVertices(), mst);
-       }
         else if (mainChoice != 0)
             cout << "Invalid choice!\n";
     } while (mainChoice != 0);
