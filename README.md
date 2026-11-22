@@ -1,57 +1,53 @@
-# Domain-Specific DSA Library
+# DSLib — C++ DSA Library
 
-A modular C++ library that provides reusable data structures
-and domain-specific abstractions for real-world applications.
+DSLib is a C++17 library containing the core data-structure implementations and two domain modules: School and Hospital.
 
-## Features
+## Requirements
+- CMake 3.16 or newer
+- A C++17 compiler (GCC, Clang, or MSVC)
 
-- Stack
-- Queue
-- Deque
-- Linked Lists
-- Trees
-- Graphs
-- Domain-specific abstractions
-- Developer-friendly APIs
+## Build
 
-## Project Structure
+```bash
+cmake -S . -B build
+cmake --build build --config Release
+```
 
-include/   → Public headers
+## Run the example
 
-src/       → Implementations
+```bash
+./build/dslib_demo
+```
 
-examples/  → Usage examples
+On Windows with a multi-configuration generator, the executable may be under `build/Release/`.
 
-tests/     → Tests
+## Run tests
 
-docs/      → Documentation
+```bash
+ctest --test-dir build --output-on-failure
+```
 
-## Getting Started
+## Use the library in another CMake project
 
-Clone the repository.
+```cmake
+add_subdirectory(path/to/DSLib)
+target_link_libraries(your_program PRIVATE DSLib::dslib)
+```
 
-Compile the required source files.
+Then include the required module headers:
 
-Include the required header:
+```cpp
+#include "school.h"
+#include "hospital.h"
+```
 
-#include "dsa/Stack.hpp"
+## Project layout
 
-## Team
+- `include/dslib/` — core DSA public headers
+- `include/school/` — School domain header
+- `include/hospital/` — Hospital domain header
+- `src/` — core DSA implementations
+- `school/` and `hospital/` — domain implementations
+- `examples/` — example application
+- `tests/` — basic build and behavior smoke test
 
-Hrishika Karki
-
-Anmol Panwar
-
-Ayushi Raturi
-
-Vanshika Kapruwan
-
-## Roadmap
-
-- [x] Basic DSA implementations
-- [ ] Refactor into reusable library
-- [ ] Add tests
-- [ ] Add documentation
-- [ ] Domain-specific modules
-- [ ] VS Code developer support
-- [ ] Frontend/demo

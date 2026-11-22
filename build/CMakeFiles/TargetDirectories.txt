@@ -1,0 +1,11 @@
+C:/Users/DELL/OneDrive/Desktop/pbl/build/CMakeFiles/dslib.dir
+C:/Users/DELL/OneDrive/Desktop/pbl/build/CMakeFiles/dslib_demo.dir
+C:/Users/DELL/OneDrive/Desktop/pbl/build/CMakeFiles/Experimental.dir
+C:/Users/DELL/OneDrive/Desktop/pbl/build/CMakeFiles/Nightly.dir
+C:/Users/DELL/OneDrive/Desktop/pbl/build/CMakeFiles/Continuous.dir
+C:/Users/DELL/OneDrive/Desktop/pbl/build/CMakeFiles/NightlyMemoryCheck.dir
+C:/Users/DELL/OneDrive/Desktop/pbl/build/CMakeFiles/domain_smoke_test.dir
+C:/Users/DELL/OneDrive/Desktop/pbl/build/CMakeFiles/RUN_TESTS.dir
+C:/Users/DELL/OneDrive/Desktop/pbl/build/CMakeFiles/INSTALL.dir
+C:/Users/DELL/OneDrive/Desktop/pbl/build/CMakeFiles/ALL_BUILD.dir
+C:/Users/DELL/OneDrive/Desktop/pbl/build/CMakeFiles/ZERO_CHECK.dir

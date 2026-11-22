@@ -1,0 +1,18 @@
+Start testing: Nov 22 16:01 India Standard Time
+----------------------------------------------------------
+1/1 Testing: domain_smoke_test
+1/1 Test: domain_smoke_test
+Command: "C:/Users/DELL/OneDrive/Desktop/pbl/build/Release/domain_smoke_test.exe"
+Directory: C:/Users/DELL/OneDrive/Desktop/pbl/build
+"domain_smoke_test" start time: Nov 22 16:01 India Standard Time
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.14 sec
+----------------------------------------------------------
+Test Passed.
+"domain_smoke_test" end time: Nov 22 16:01 India Standard Time
+"domain_smoke_test" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Nov 22 16:01 India Standard Time
