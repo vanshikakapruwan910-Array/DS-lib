@@ -70,3 +70,20 @@ install(EXPORT DSLibTargets
     NAMESPACE DSLib::
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/DSLib
 )
+
+# Python bindings using pybind11
+option(DSLIB_BUILD_PYTHON "Build Python bindings" ON)
+
+if(DSLIB_BUILD_PYTHON)
+    find_package(Python COMPONENTS Interpreter Development.Module REQUIRED)
+    find_package(pybind11 CONFIG REQUIRED)
+
+    pybind11_add_module(dslib_python bindings/bindings.cpp)
+
+    set_target_properties(dslib_python PROPERTIES
+        OUTPUT_NAME dslib
+        ARCHIVE_OUTPUT_NAME dslib_python
+    )
+
+    target_link_libraries(dslib_python PRIVATE DSLib::dslib)
+endif()

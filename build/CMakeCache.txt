@@ -258,6 +258,9 @@ DART_TESTING_TIMEOUT:STRING=1500
 //Build the example program
 DSLIB_BUILD_EXAMPLES:BOOL=ON
 
+//Build Python bindings
+DSLIB_BUILD_PYTHON:BOOL=ON
+
 //Build basic domain smoke tests
 DSLIB_BUILD_TESTS:BOOL=ON
 
@@ -284,6 +287,9 @@ MEMORYCHECK_SUPPRESSIONS_FILE:FILEPATH=
 
 //Name of the computer/site where compile is being run
 SITE:STRING=DESKTOP-UUP94A4
+
+//No help, variable specified on the command line.
+pybind11_DIR:UNINITIALIZED=C:\Users\DELL\Downloads\anna\Lib\site-packages\pybind11\share\cmake\pybind11
 
 
 ########################
@@ -459,16 +465,54 @@ CTEST_SUBMIT_RETRY_COUNT-ADVANCED:INTERNAL=1
 CTEST_SUBMIT_RETRY_DELAY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: DART_TESTING_TIMEOUT
 DART_TESTING_TIMEOUT-ADVANCED:INTERNAL=1
+//Details about finding Python
+FIND_PACKAGE_MESSAGE_DETAILS_Python:INTERNAL=[C:/Users/DELL/Downloads/anna/python.exe][C:/Users/DELL/Downloads/anna/libs/python314.lib][C:/Users/DELL/Downloads/anna/Include][found components: Interpreter Development.Module ][v3.14.6()]
 //ADVANCED property for variable: GITCOMMAND
 GITCOMMAND-ADVANCED:INTERNAL=1
+//Test HAS_MSVC_GL_LTCG
+HAS_MSVC_GL_LTCG:INTERNAL=1
 //ADVANCED property for variable: MAKECOMMAND
 MAKECOMMAND-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: MEMORYCHECK_COMMAND
 MEMORYCHECK_COMMAND-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: MEMORYCHECK_SUPPRESSIONS_FILE
 MEMORYCHECK_SUPPRESSIONS_FILE-ADVANCED:INTERNAL=1
+//Python executable during the last CMake run
+PYBIND11_PYTHON_EXECUTABLE_LAST:INTERNAL=C:/Users/DELL/Downloads/anna/python.exe
+//Python debug status
+PYTHON_IS_DEBUG:INTERNAL=0
+PYTHON_MODULE_DEBUG_POSTFIX:INTERNAL=
+PYTHON_MODULE_EXTENSION:INTERNAL=.cp314-win_amd64.pyd
 //ADVANCED property for variable: SITE
 SITE-ADVANCED:INTERNAL=1
 //CMAKE_INSTALL_PREFIX during last run
 _GNUInstallDirs_LAST_CMAKE_INSTALL_PREFIX:INTERNAL=C:/Program Files (x86)/DSLib
+_PYBIND11_CROSSCOMPILING:INTERNAL=OFF
+_Python:INTERNAL=Python
+//Compiler reason failure
+_Python_Compiler_REASON_FAILURE:INTERNAL=
+_Python_DEVELOPMENT_MODULE_SIGNATURE:INTERNAL=d5222d1623365f5c2ca35fd4fbb640bf
+//Development reason failure
+_Python_Development_REASON_FAILURE:INTERNAL=
+//Path to a program.
+_Python_EXECUTABLE:INTERNAL=C:/Users/DELL/Downloads/anna/python.exe
+//Path to a program.
+_Python_EXECUTABLE_DEBUG:INTERNAL=_Python_EXECUTABLE_DEBUG-NOTFOUND
+//Path to a file.
+_Python_INCLUDE_DIR:INTERNAL=C:/Users/DELL/Downloads/anna/Include
+//Python Properties
+_Python_INTERPRETER_PROPERTIES:INTERNAL=Python;3;14;6;64;<none>;cp314-win_amd64;;;C:/Users/DELL/Downloads/anna/Lib;C:/Users/DELL/Downloads/anna/Lib;C:/Users/DELL/Downloads/anna/Lib/site-packages;C:/Users/DELL/Downloads/anna/Lib/site-packages
+_Python_INTERPRETER_SIGNATURE:INTERNAL=59a377bcfba28b38a624ad1ab87aa264
+//Interpreter reason failure
+_Python_Interpreter_REASON_FAILURE:INTERNAL=
+//Path to a library.
+_Python_LIBRARY_DEBUG:INTERNAL=_Python_LIBRARY_DEBUG-NOTFOUND
+//Path to a library.
+_Python_LIBRARY_RELEASE:INTERNAL=C:/Users/DELL/Downloads/anna/libs/python314.lib
+//NumPy reason failure
+_Python_NumPy_REASON_FAILURE:INTERNAL=
+//Path to a library.
+_Python_RUNTIME_LIBRARY_RELEASE:INTERNAL=C:/Users/DELL/Downloads/anna/python314.dll
+//Directories where pybind11 and possibly Python headers are located
+pybind11_INCLUDE_DIRS:INTERNAL=C:/Users/DELL/Downloads/anna/Lib/site-packages/pybind11/include;C:/Users/DELL/Downloads/anna/Include
 

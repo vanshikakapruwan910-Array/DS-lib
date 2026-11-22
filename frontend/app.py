@@ -1,506 +1,1460 @@
 
-'''import streamlit as st
+import streamlit as st
+import dslib
+import json
+from pathlib import Path
+
+# ==================================================
+# PAGE CONFIGURATION
+# ==================================================
 
 st.set_page_config(
     page_title="DSLib",
-    page_icon="✩",
+    page_icon="📚",
     layout="wide"
 )
 
-st.title("DSLib : Domain-Specific Data Structures")
-st.caption("A C++ data structures library for real-world workflows")
+DATA_FILE = Path(__file__).with_name("dslib_data.json")
 
+# ==================================================
+# CSS
+# ==================================================
 
-if "items" not in st.session_state:
-    st.session_state["items"] = []
-
-if "history" not in st.session_state:
-    st.session_state.history = []
-
-
-domain = st.sidebar.selectbox(
-    "Choose domain",
-    ["Regular", "Hospital", "School", "Bank"]
-)
-
-structure = st.sidebar.selectbox(
-    "Choose data structure",
-    ["Queue", "Deque", "Stack", "Linked List", "Tree", "Graph"]
-)
-
-st.header(f"{domain} | {structure}")
-
-
-if structure == "Queue":
-    st.subheader("Queue Operations")
-
-    with st.form("add_item"):
-        item_id = st.text_input("Record ID")
-        item_name = st.text_input("Name")
-        submitted = st.form_submit_button("Add to Queue")
-
-    if submitted:
-        if item_id.strip() and item_name.strip():
-            if any(
-                item["id"] == item_id.strip()
-                for item in st.session_state["items"]
-            ):
-                st.error("This ID already exists.")
-            else:
-                st.session_state["items"].append({
-                    "id": item_id.strip(),
-                    "name": item_name.strip()
-                })
-                st.session_state.history.append(f"Added {item_id.strip()}")
-                st.success("Record added successfully.")
-        else:
-            st.warning("Enter valid record.")
-
-    col1, col2 = st.columns(2)
-
-    with col1:
-        if st.button("Serve Next", use_container_width=True):
-            if st.session_state["items"]:
-                removed = st.session_state["items"].pop(0)
-                st.session_state.history.append(
-                    f"Served {removed['id']}"
-                )
-                st.success(f"Served: {removed['name']}")
-            else:
-                st.warning("The queue is empty.")
-
-    with col2:
-        if st.button("Clear Demo Data", use_container_width=True):
-            st.session_state["items"] = []
-            st.session_state.history = []
-            st.rerun()
-
-
-    st.subheader("Current Queue")
-
-    if st.session_state["items"]:
-        st.dataframe(
-            st.session_state["items"],
-            use_container_width=True,
-            hide_index=True
-        )
-    else:
-        st.write("No records in the queue yet.")
-
-    st.metric(
-        "Records Waiting",
-        len(st.session_state["items"])
-    )
-
-    st.subheader("Recent Activity")
-    for event in reversed(st.session_state.history[-5:]):
-        st.write("•", event)
-'''
-
-
-import streamlit as st
-import pandas as pd
-from datetime import date
-
-# ---------------- PAGE CONFIG ----------------
-st.set_page_config(
-    page_title="DSA Management System",
-    page_icon="🎓",
-    layout="wide"
-)
-
-# ---------------- CUSTOM CSS ----------------
 st.markdown("""
 <style>
-.main {
-    background-color: #f5f7fb;
-}
-[data-testid="stSidebar"] {
-    background-color: #172554;
-}
-[data-testid="stSidebar"] * {
-    color: white !important;
-}
-.metric-card {
-    background: white;
-    padding: 20px;
-    border-radius: 12px;
-    border: 1px solid #e5e7eb;
-}
-h1, h2, h3 {
-    color: #172554;
-}
+    .stApp {
+        background-color: #ffffff;
+        color: #000000;
+    }
+
+    [data-testid="stSidebar"] {
+        background-color: #f5f5f5;
+    }
+
+    html, body, p, span, label,
+    h1, h2, h3, h4, h5, h6,
+    .stMarkdown, .stText,
+    [data-testid="stMetricLabel"],
+    [data-testid="stMetricValue"] {
+        color: #000000 !important;
+    }
+
+    input, textarea {
+        color: #000000 !important;
+        background-color: #ffffff !important;
+    }
+
+    div[data-baseweb="select"] * {
+        color: #000000 !important;
+    }
+
+    button {
+        color: #000000 !important;
+    }
+
+    [data-testid="stTabs"] button {
+        color: #000000 !important;
+    }
+
+    .stButton button {
+        background-color: #eeeeee;
+        border: 1px solid #cccccc;
+    }
+
+    .stButton button:hover {
+        border-color: #555555;
+    }
 </style>
 """, unsafe_allow_html=True)
 
-# ---------------- LINKED LIST ----------------
-class StudentNode:
-    def __init__(self, student_id, name, course, grade):
-        self.student_id = student_id
-        self.name = name
-        self.course = course
-        self.grade = grade
-        self.next = None
+
+# ==================================================
+# DATA STRUCTURE OBJECTS
+# ==================================================
+
+CLASSES = {
+    "students": dslib.StudentManagement,
+    "student_queue": dslib.StudentService,
+    "assignments": dslib.AssignmentManagement,
+    "student_history": dslib.StudentHistory,
+    "organization": dslib.OrganizationHierarchy,
+    "curriculum": dslib.CurriculumManagement,
+    "campus": dslib.CampusNavigation,
+    "prerequisites": dslib.SubjectPrerequisites,
+
+    "patients": dslib.PatientManagement,
+    "patient_queue": dslib.PatientQueue,
+    "appointments": dslib.AppointmentManagement,
+    "patient_history": dslib.PatientRecordHistory,
+    "departments": dslib.DepartmentHierarchy,
+    "categories": dslib.MedicalRecordCategories,
+    "hospital_navigation": dslib.HospitalNavigation,
+    "department_connections": dslib.DepartmentConnections
+}
 
 
-class StudentLinkedList:
-    def __init__(self):
-        self.head = None
+# ==================================================
+# PERSISTENCE
+# ==================================================
 
-    def insert(self, student_id, name, course, grade):
-        new_node = StudentNode(student_id, name, course, grade)
-
-        if self.head is None:
-            self.head = new_node
-            return
-
-        temp = self.head
-        while temp.next:
-            temp = temp.next
-
-        temp.next = new_node
-
-    def delete(self, student_id):
-        temp = self.head
-        prev = None
-
-        while temp:
-            if temp.student_id == student_id:
-                if prev is None:
-                    self.head = temp.next
-                else:
-                    prev.next = temp.next
-                return True
-
-            prev = temp
-            temp = temp.next
-
-        return False
-
-    def search(self, student_id):
-        temp = self.head
-        while temp:
-            if temp.student_id == student_id:
-                return temp
-            temp = temp.next
-        return None
-
-    def display(self):
-        students = []
-        temp = self.head
-
-        while temp:
-            students.append({
-                "ID": temp.student_id,
-                "Name": temp.name,
-                "Course": temp.course,
-                "Grade": temp.grade
-            })
-            temp = temp.next
-
-        return students
+def save_operations():
+    with open(DATA_FILE, "w", encoding="utf-8") as file:
+        json.dump(
+            st.session_state.operations,
+            file,
+            indent=4
+        )
 
 
-# ---------------- QUEUE ----------------
-class AdmissionQueue:
-    def __init__(self):
-        self.queue = []
+def initialize_objects():
+    st.session_state.objects = {
+        key: cls() for key, cls in CLASSES.items()
+    }
 
-    def enqueue(self, request):
-        self.queue.append(request)
+    st.session_state.operations = []
 
-    def dequeue(self):
-        if self.is_empty():
-            return None
-        return self.queue.pop(0)
+    if DATA_FILE.exists():
+        try:
+            with open(DATA_FILE, "r", encoding="utf-8") as file:
+                saved_operations = json.load(file)
 
-    def peek(self):
-        if self.is_empty():
-            return None
-        return self.queue[0]
+            for operation in saved_operations:
+                obj = st.session_state.objects[operation["object"]]
 
-    def is_empty(self):
-        return len(self.queue) == 0
+                getattr(obj, operation["method"])(
+                    *operation["args"]
+                )
+
+            st.session_state.operations = saved_operations
+
+        except Exception as error:
+            st.error(
+                "Could not restore saved data. "
+                "Check dslib_data.json: " + str(error)
+            )
 
 
-# ---------------- INITIAL DATA ----------------
-if "students" not in st.session_state:
-    st.session_state.students = StudentLinkedList()
+if "objects" not in st.session_state:
+    initialize_objects()
 
-    st.session_state.students.insert("S101", "Aarav Sharma", "BTech CSE", "A")
-    st.session_state.students.insert("S102", "Ananya Gupta", "BTech CSE", "B")
-    st.session_state.students.insert("S103", "Rohan Mehta", "BBA", "A")
-    st.session_state.students.insert("S104", "Priya Singh", "BTech IT", "A")
 
-if "admissions" not in st.session_state:
-    st.session_state.admissions = AdmissionQueue()
+def get_object(key):
+    return st.session_state.objects[key]
 
-if "request_count" not in st.session_state:
-    st.session_state.request_count = 0
 
-students = st.session_state.students
-admissions = st.session_state.admissions
+def modify(key, method, *args):
+    obj = get_object(key)
 
-# ---------------- SIDEBAR ----------------
-st.sidebar.title("🎓 DSA SYSTEM")
-st.sidebar.caption("Domain Specific Data Structures Library")
-st.sidebar.divider()
+    result = getattr(obj, method)(*args)
+
+    st.session_state.operations.append({
+        "object": key,
+        "method": method,
+        "args": list(args)
+    })
+
+    save_operations()
+
+    return result
+
+
+def read(key, method, *args):
+    obj = get_object(key)
+    return getattr(obj, method)(*args)
+
+
+# ==================================================
+# REUSABLE UI HELPERS
+# ==================================================
+
+def show_result(result):
+    if isinstance(result, bool):
+        if result:
+            st.success("Operation successful.")
+        else:
+            st.warning("Operation returned false.")
+    else:
+        st.info(str(result))
+
+
+def text_form(title, fields, object_key, method):
+    with st.form(title):
+        values = []
+
+        for field in fields:
+            values.append(st.text_input(field))
+
+        submitted = st.form_submit_button("Submit")
+
+        if submitted:
+            if all(value.strip() for value in values):
+                result = modify(
+                    object_key,
+                    method,
+                    *values
+                )
+                show_result(result)
+            else:
+                st.warning("Please fill in all fields.")
+
+
+
+def one_input_action(title, field, object_key, method):
+    form_key = f"{object_key}_{method}_{title}"
+
+    with st.form(form_key):
+        value = st.text_input(field)
+        submitted = st.form_submit_button("Submit")
+
+        if submitted:
+            if value.strip():
+                show_result(modify(object_key, method, value))
+            else:
+                st.warning("Enter a value.")
+
+
+def two_input_action(title, first, second, object_key, method):
+    form_key = f"{object_key}_{method}_{title}"
+
+    with st.form(form_key):
+        value1 = st.text_input(first)
+        value2 = st.text_input(second)
+
+        submitted = st.form_submit_button("Submit")
+
+        if submitted:
+            if value1.strip() and value2.strip():
+                show_result(
+                    modify(object_key, method, value1, value2)
+                )
+            else:
+                st.warning("Fill in both fields.")
+
+
+def display_action(title, object_key, method, *args):
+    if st.button(title, key=title + object_key):
+        st.text(read(object_key, method, *args))
+
+
+def metric_action(title, object_key, method):
+    st.metric(title, read(object_key, method))
+
+
+# ==================================================
+# NAVIGATION
+# ==================================================
+
+if "selected_page" not in st.session_state:
+    st.session_state.selected_page = "Dashboard"
+
+if "pending_page" in st.session_state:
+    st.session_state.selected_page = st.session_state.pending_page
+    del st.session_state.pending_page
 
 page = st.sidebar.radio(
     "NAVIGATION",
-    [
-        "Dashboard",
-        "Student Management",
-        "Admission Queue",
-        "About the Project"
-    ]
+    ["Dashboard", "School", "Hospital"],
+    key="selected_page"
 )
 
-st.sidebar.divider()
-st.sidebar.caption("Built using C++ DSA concepts")
+st.sidebar.markdown("---")
+st.sidebar.markdown("### DSLib")
+st.sidebar.caption("Domain-Specific Data Structures Library")
 
-# ---------------- DASHBOARD ----------------
+
+# ==================================================
+# DASHBOARD
+# ==================================================
+
 if page == "Dashboard":
 
-    st.title("School Management Dashboard")
-    st.caption("Overview of school operations and data structures")
+    st.title("DSLib Dashboard")
+    st.write("Domain-Specific Data Structures Library")
 
-    data = students.display()
+    st.markdown("---")
 
-    col1, col2, col3, col4 = st.columns(4)
+    st.subheader("Welcome to DSLib")
 
-    with col1:
-        st.metric("Total Students", len(data))
-
-    with col2:
-        st.metric("Admission Requests", len(admissions.queue))
-
-    with col3:
-        st.metric("Courses", len(set(s["Course"] for s in data)))
-
-    with col4:
-        st.metric("Data Structures", "2")
-
-    st.divider()
-
-    left, right = st.columns([2, 1])
-
-    with left:
-        st.subheader("Recent Student Records")
-
-        if data:
-            st.dataframe(
-                pd.DataFrame(data),
-                use_container_width=True,
-                hide_index=True
-            )
-        else:
-            st.info("No student records available.")
-
-    with right:
-        st.subheader("System Modules")
-
-        st.info("🔗 Linked List\n\nStudent record management")
-
-        st.info("📥 Queue\n\nAdmission request processing")
-
-    st.subheader("System Information")
-
-    st.write("""
-    This application demonstrates how fundamental Data Structures
-    can be implemented in real-world school management operations.
-
-    - Linked List: Dynamic student record management.
-    - Queue: First-In-First-Out admission processing.
-    """)
-
-# ---------------- STUDENT MANAGEMENT ----------------
-elif page == "Student Management":
-
-    st.title("Student Management")
-    st.caption("Linked List Implementation")
-
-    tab1, tab2, tab3 = st.tabs([
-        "View Students",
-        "Add Student",
-        "Search / Delete"
-    ])
-
-    with tab1:
-        st.subheader("Student Records")
-
-        data = students.display()
-
-        if data:
-            st.dataframe(pd.DataFrame(data), use_container_width=True,
-                         hide_index=True)
-        else:
-            st.warning("No students found.")
-
-        st.caption("Underlying Structure: Singly Linked List")
-
-    with tab2:
-        st.subheader("Register New Student")
-
-        with st.form("add_student"):
-            sid = st.text_input("Student ID")
-            name = st.text_input("Student Name")
-            course = st.selectbox(
-                "Course",
-                ["BTech CSE", "BTech IT", "BBA", "BCA", "MBA"]
-            )
-            grade = st.selectbox("Grade", ["A", "B", "C", "D"])
-
-            submit = st.form_submit_button("Add Student")
-
-            if submit:
-                if not sid or not name:
-                    st.error("Please enter all required details.")
-                elif students.search(sid):
-                    st.error("Student ID already exists.")
-                else:
-                    students.insert(sid, name, course, grade)
-                    st.success("Student added successfully!")
-                    st.rerun()
-
-    with tab3:
-        st.subheader("Search Student")
-
-        search_id = st.text_input("Enter Student ID")
-
-        if st.button("Search"):
-            result = students.search(search_id)
-
-            if result:
-                st.success("Student Found")
-                st.write("**Name:**", result.name)
-                st.write("**Course:**", result.course)
-                st.write("**Grade:**", result.grade)
-            else:
-                st.error("Student not found.")
-
-        st.divider()
-
-        st.subheader("Delete Student")
-
-        delete_id = st.text_input("Student ID to delete")
-
-        if st.button("Delete Student"):
-            if students.delete(delete_id):
-                st.success("Student deleted successfully!")
-                st.rerun()
-            else:
-                st.error("Student ID not found.")
-
-# ---------------- ADMISSION QUEUE ----------------
-elif page == "Admission Queue":
-
-    st.title("Admission Request Management")
-    st.caption("Queue Data Structure | First In First Out (FIFO)")
+    st.write(
+        "A custom C++ data structures library designed "
+        "for real-world School and Hospital management."
+    )
 
     col1, col2 = st.columns(2)
 
     with col1:
-        st.metric("Pending Requests", len(admissions.queue))
+        st.subheader("School Management")
+
+        if st.button("Open School", use_container_width=True):
+            st.session_state.pending_page = "School"
+            st.rerun()
 
     with col2:
-        st.metric("Total Requests Received", st.session_state.request_count)
+        st.subheader("Hospital Management")
 
-    st.divider()
+        if st.button("Open Hospital", use_container_width=True):
+            st.session_state.pending_page = "Hospital"
+            st.rerun()
 
-    st.subheader("Add Admission Request")
+    st.markdown("---")
+    st.subheader("Overview")
 
-    with st.form("admission_form"):
-        applicant = st.text_input("Applicant Name")
-        applicant_id = st.text_input("Application ID")
-        requested_course = st.selectbox(
-            "Course Applied For",
-            ["BTech CSE", "BTech IT", "BBA", "BCA", "MBA"]
+    col1, col2, col3, col4 = st.columns(4)
+
+    col1.metric(
+        "Students",
+        read("students", "getStudentCount")
+    )
+
+    col2.metric(
+        "Waiting Students",
+        read("student_queue", "getWaitingStudentCount")
+    )
+
+    col3.metric(
+        "Patients",
+        read("patients", "getPatientCount")
+    )
+
+    col4.metric(
+        "Waiting Patients",
+        read("patient_queue", "getWaitingCount")
+    )
+
+    st.markdown("---")
+    st.subheader("Storage")
+
+    st.write(
+        "Your operations are saved in dslib_data.json "
+        "inside the frontend folder."
+    )
+
+    if st.button("Refresh Dashboard"):
+        st.rerun()
+
+
+# ==================================================
+# SCHOOL
+# ==================================================
+
+elif page == "School":
+
+    st.title("School Management")
+    st.write("Manage students and academic activities.")
+
+    tabs = st.tabs([
+        "Students",
+        "Student Queue",
+        "Assignments",
+        "History",
+        "Organization",
+        "Curriculum",
+        "Campus Navigation",
+        "Prerequisites"
+    ])
+
+    # ----------------------------------------------
+    # STUDENTS
+    # ----------------------------------------------
+
+    with tabs[0]:
+
+        action = st.radio(
+            "Student Operation",
+            [
+                "Register",
+                "Remove",
+                "Search",
+                "Update",
+                "View All"
+            ],
+            horizontal=True,
+            key="school_students"
         )
 
-        add_request = st.form_submit_button("Add to Queue")
-
-        if add_request:
-            if applicant and applicant_id:
-                if any(r["ID"] == applicant_id for r in admissions.queue):
-                    st.error("Application ID already exists in queue.")
-                else:
-                    admissions.enqueue({
-                        "ID": applicant_id,
-                        "Name": applicant,
-                        "Course": requested_course
-                    })
-                    st.session_state.request_count += 1
-                    st.success("Request added to admission queue!")
-                    st.rerun()
-            else:
-                st.error("Please enter applicant details.")
-
-    st.divider()
-
-    st.subheader("Pending Admission Requests")
-
-    if admissions.queue:
-        for i, request in enumerate(admissions.queue):
-            st.write(
-                f"**{i+1}. {request['Name']}** — "
-                f"{request['ID']} | {request['Course']}"
+        if action == "Register":
+            text_form(
+                "Register Student",
+                ["Student ID", "Student Name"],
+                "students",
+                "registerStudent"
             )
 
-        st.info("Requests are processed in First-In First-Out order.")
+        elif action == "Remove":
+            one_input_action(
+                "Remove Student",
+                "Student ID",
+                "students",
+                "removeStudent"
+            )
 
-        if st.button("Process Next Request"):
-            processed = admissions.dequeue()
+        elif action == "Search":
+            with st.form("search_student"):
+                sid = st.text_input("Student ID")
+                submit = st.form_submit_button("Search")
 
-            if processed:
-                st.success(
-                    f"Processed application of {processed['Name']}"
+                if submit:
+                    if sid.strip():
+                        if read("students", "searchStudent", sid):
+                            st.success("Student found.")
+                        else:
+                            st.error("Student not found.")
+
+        elif action == "Update":
+            text_form(
+                "Update Student",
+                ["Student ID", "New Details"],
+                "students",
+                "updateStudentDetails"
+            )
+
+        elif action == "View All":
+            display_action(
+                "Display Students",
+                "students",
+                "displayAllStudents"
+            )
+
+        st.metric(
+            "Total Students",
+            read("students", "getStudentCount")
+        )
+
+    # ----------------------------------------------
+    # STUDENT QUEUE
+    # ----------------------------------------------
+
+    with tabs[1]:
+
+        action = st.radio(
+            "Queue Operation",
+            [
+                "Add",
+                "Serve Next",
+                "View Next",
+                "Remove"
+            ],
+            horizontal=True,
+            key="school_queue"
+        )
+
+        if action == "Add":
+            one_input_action(
+                "Add Student",
+                "Student ID",
+                "student_queue",
+                "addStudentToQueue"
+            )
+
+        elif action == "Serve Next":
+            if st.button("Serve Next Student"):
+                show_result(
+                    modify("student_queue", "serveNextStudent")
                 )
-                st.rerun()
 
-    else:
-        st.info("No pending admission requests.")
+        elif action == "View Next":
+            if st.button("View Next Student"):
+                show_result(
+                    read("student_queue", "viewNextStudent")
+                )
 
-# ---------------- ABOUT ----------------
-elif page == "About the Project":
+        elif action == "Remove":
+            one_input_action(
+                "Remove Student From Queue",
+                "Student ID",
+                "student_queue",
+                "removeStudentFromQueue"
+            )
 
-    st.title("About the Project")
+        st.metric(
+            "Waiting Students",
+            read("student_queue", "getWaitingStudentCount")
+        )
 
-    st.subheader("Domain Specific Data Structures Library")
+    # ----------------------------------------------
+    # ASSIGNMENTS
+    # ----------------------------------------------
 
-    st.write("""
-    A C++ based Data Structures Library designed to provide
-    reusable data structure implementations for domain-specific
-    applications.
+    with tabs[2]:
 
-    Instead of using generic data structures alone, this project
-    connects them with practical real-world operations.
-    """)
+        action = st.radio(
+            "Assignment Operation",
+            [
+                "Add",
+                "Remove",
+                "Update",
+                "Search",
+                "View All"
+            ],
+            horizontal=True,
+            key="school_assignments"
+        )
 
-    st.subheader("Implemented Modules")
+        if action == "Add":
+            text_form(
+                "Add Assignment",
+                ["Assignment Name", "Description"],
+                "assignments",
+                "addAssignment"
+            )
 
-    st.markdown("""
-    **1. Student Management — Linked List**
-    - Insert student records
-    - Delete student records
-    - Search student records
-    - Display all students
+        elif action == "Remove":
+            one_input_action(
+                "Remove Assignment",
+                "Assignment Name",
+                "assignments",
+                "removeAssignment"
+            )
 
-    **2. Admission Management — Queue**
-    - Enqueue admission requests
-    - Dequeue processed requests
-    - View the front request
-    - Maintain FIFO order
-    """)
+        elif action == "Update":
+            text_form(
+                "Update Assignment",
+                ["Assignment Name", "New Description"],
+                "assignments",
+                "updateAssignment"
+            )
 
-    st.subheader("Technology Stack")
+        elif action == "Search":
+            with st.form("search_assignment"):
+                name = st.text_input("Assignment Name")
+                submit = st.form_submit_button("Search")
 
-    st.write("""
-    - Core Library: C++
-    - Frontend: Streamlit
-    - Data Structures: Linked List and Queue
-    - Interface: Python
-    """)
+                if submit and name.strip():
+                    if read("assignments", "searchAssignment", name):
+                        st.success("Assignment found.")
+                    else:
+                        st.error("Assignment not found.")
 
-    st.success("Demonstrating the practical application of DSA concepts.")
+        elif action == "View All":
+            display_action(
+                "Display Assignments",
+                "assignments",
+                "displayAllAssignments"
+            )
 
+    # ----------------------------------------------
+    # STUDENT HISTORY
+    # ----------------------------------------------
+
+    with tabs[3]:
+
+        text_form(
+            "Record Student Change",
+            ["Change Description"],
+            "student_history",
+            "recordStudentChange"
+        )
+
+        col1, col2 = st.columns(2)
+
+        with col1:
+            display_action(
+                "View History",
+                "student_history",
+                "getStudentChangeHistory"
+            )
+
+        with col2:
+            display_action(
+                "View Last Change",
+                "student_history",
+                "viewLastStudentChange"
+            )
+
+        if st.button("Undo Last Change"):
+            show_result(
+                modify(
+                    "student_history",
+                    "undoLastStudentChange"
+                )
+            )
+
+    # ----------------------------------------------
+    # ORGANIZATION HIERARCHY
+    # ----------------------------------------------
+
+    with tabs[4]:
+
+        action = st.radio(
+            "Organization Operation",
+            [
+                "Add Organization",
+                "Add Subordinate",
+                "Remove",
+                "Search",
+                "Display",
+                "Find Level",
+                "Count Members"
+            ],
+            horizontal=True,
+            key="organization"
+        )
+
+        if action == "Add Organization":
+            one_input_action(
+                "Add Organization",
+                "Organization Name",
+                "organization",
+                "addOrganizationNode"
+            )
+
+        elif action == "Add Subordinate":
+            two_input_action(
+                "Add Subordinate",
+                "Parent Organization",
+                "Subordinate Organization",
+                "organization",
+                "addSubordinate"
+            )
+
+        elif action == "Remove":
+            one_input_action(
+                "Remove Organization",
+                "Organization Name",
+                "organization",
+                "removeOrganizationNode"
+            )
+
+        elif action == "Search":
+            with st.form("search_organization"):
+                name = st.text_input("Organization Name")
+                submit = st.form_submit_button("Search")
+
+                if submit and name.strip():
+                    if read("organization", "searchOrganizationNode", name):
+                        st.success("Organization found.")
+                    else:
+                        st.error("Organization not found.")
+
+        elif action == "Display":
+            display_action(
+                "Display Hierarchy",
+                "organization",
+                "displayOrganizationHierarchy"
+            )
+
+        elif action == "Find Level":
+            with st.form("organization_level"):
+                name = st.text_input("Organization Name")
+                submit = st.form_submit_button("Find Level")
+
+                if submit and name.strip():
+                    st.write(
+                        read("organization", "findHierarchyLevel", name)
+                    )
+
+        elif action == "Count Members":
+            metric_action(
+                "Organization Members",
+                "organization",
+                "countOrganizationMembers"
+            )
+
+    # ----------------------------------------------
+    # CURRICULUM MANAGEMENT
+    # ----------------------------------------------
+
+    with tabs[5]:
+
+        action = st.radio(
+            "Curriculum Operation",
+            [
+                "Add Subject",
+                "Add Chapter",
+                "Add Topic",
+                "Remove Topic",
+                "Search Topic",
+                "Display",
+                "Count Topics",
+                "Find Depth"
+            ],
+            horizontal=True,
+            key="curriculum"
+        )
+
+        if action == "Add Subject":
+            one_input_action(
+                "Add Subject",
+                "Subject Name",
+                "curriculum",
+                "addSubject"
+            )
+
+        elif action == "Add Chapter":
+            two_input_action(
+                "Add Chapter",
+                "Subject Name",
+                "Chapter Name",
+                "curriculum",
+                "addChapter"
+            )
+
+        elif action == "Add Topic":
+            two_input_action(
+                "Add Topic",
+                "Chapter Name",
+                "Topic Name",
+                "curriculum",
+                "addTopic"
+            )
+
+        elif action == "Remove Topic":
+            one_input_action(
+                "Remove Topic",
+                "Topic Name",
+                "curriculum",
+                "removeTopic"
+            )
+
+        elif action == "Search Topic":
+            with st.form("search_topic"):
+                topic = st.text_input("Topic Name")
+                submit = st.form_submit_button("Search")
+
+                if submit and topic.strip():
+                    if read("curriculum", "searchTopic", topic):
+                        st.success("Topic found.")
+                    else:
+                        st.error("Topic not found.")
+
+        elif action == "Display":
+            display_action(
+                "Display Curriculum",
+                "curriculum",
+                "displayCurriculum"
+            )
+
+        elif action == "Count Topics":
+            metric_action(
+                "Total Topics",
+                "curriculum",
+                "countTopics"
+            )
+
+        elif action == "Find Depth":
+            metric_action(
+                "Curriculum Depth",
+                "curriculum",
+                "findCurriculumDepth"
+            )
+
+    # ----------------------------------------------
+    # CAMPUS NAVIGATION
+    # ----------------------------------------------
+
+    with tabs[6]:
+
+        action = st.radio(
+            "Campus Operation",
+            [
+                "Add Location",
+                "Connect Locations",
+                "Remove Location",
+                "Nearby Locations",
+                "Find Route",
+                "Shortest Route",
+                "Display Map",
+                "Connectivity"
+            ],
+            horizontal=True,
+            key="campus"
+        )
+
+        if action == "Add Location":
+            one_input_action(
+                "Add Location",
+                "Location Name",
+                "campus",
+                "addCampusLocation"
+            )
+
+        elif action == "Connect Locations":
+            two_input_action(
+                "Connect Locations",
+                "First Location",
+                "Second Location",
+                "campus",
+                "connectCampusLocations"
+            )
+
+        elif action == "Remove Location":
+            one_input_action(
+                "Remove Location",
+                "Location Name",
+                "campus",
+                "removeCampusLocation"
+            )
+
+        elif action == "Nearby Locations":
+            one_input_action(
+                "Find Nearby Locations",
+                "Starting Location",
+                "campus",
+                "findNearbyLocations"
+            )
+
+        elif action in ["Find Route", "Shortest Route"]:
+            with st.form("campus_route"):
+                start = st.text_input("Starting Location")
+                end = st.text_input("Destination")
+                submit = st.form_submit_button("Find Route")
+
+                if submit and start.strip() and end.strip():
+                    method = (
+                        "findCampusRoute"
+                        if action == "Find Route"
+                        else "findShortestCampusRoute"
+                    )
+
+                    st.text(read("campus", method, start, end))
+
+        elif action == "Display Map":
+            display_action(
+                "Display Campus Map",
+                "campus",
+                "displayCampusMap"
+            )
+
+        elif action == "Connectivity":
+            if st.button("Check Connectivity"):
+                if read("campus", "checkCampusConnectivity"):
+                    st.success("Campus is connected.")
+                else:
+                    st.warning("Campus is not fully connected.")
+
+    # ----------------------------------------------
+    # SUBJECT PREREQUISITES
+    # ----------------------------------------------
+
+    with tabs[7]:
+
+        action = st.radio(
+            "Prerequisite Operation",
+            [
+                "Add Subject",
+                "Add Prerequisite",
+                "Remove Prerequisite",
+                "View Prerequisites",
+                "Dependent Subjects",
+                "Check Prerequisites",
+                "Recommended Order",
+                "Check Cycles"
+            ],
+            horizontal=True,
+            key="prerequisites"
+        )
+
+        if action == "Add Subject":
+            one_input_action(
+                "Add Subject",
+                "Subject Name",
+                "prerequisites",
+                "addSubject"
+            )
+
+        elif action == "Add Prerequisite":
+            two_input_action(
+                "Add Prerequisite",
+                "Subject",
+                "Prerequisite Subject",
+                "prerequisites",
+                "addPrerequisite"
+            )
+
+        elif action == "Remove Prerequisite":
+            two_input_action(
+                "Remove Prerequisite",
+                "Subject",
+                "Prerequisite Subject",
+                "prerequisites",
+                "removePrerequisite"
+            )
+
+        elif action in ["View Prerequisites", "Dependent Subjects"]:
+            with st.form("prerequisite_view"):
+                subject = st.text_input("Subject Name")
+                submit = st.form_submit_button("View")
+
+                if submit and subject.strip():
+                    method = (
+                        "getPrerequisites"
+                        if action == "View Prerequisites"
+                        else "getDependentSubjects"
+                    )
+
+                    st.text(read("prerequisites", method, subject))
+
+        elif action == "Check Prerequisites":
+            with st.form("check_prerequisites"):
+                subject = st.text_input("Subject Name")
+                submit = st.form_submit_button("Check")
+
+                if submit and subject.strip():
+                    if read("prerequisites", "checkPrerequisites", subject):
+                        st.success("Prerequisites satisfied.")
+                    else:
+                        st.warning("Prerequisites not satisfied.")
+
+        elif action == "Recommended Order":
+            display_action(
+                "Get Recommended Order",
+                "prerequisites",
+                "getRecommendedSubjectOrder"
+            )
+
+        elif action == "Check Cycles":
+            if st.button("Check for Cycles"):
+                if read("prerequisites", "hasPrerequisiteCycle"):
+                    st.error("A prerequisite cycle exists.")
+                else:
+                    st.success("No prerequisite cycles found.")
+
+
+# ==================================================
+# HOSPITAL
+# ==================================================
+
+elif page == "Hospital":
+
+    st.title("Hospital Management")
+    st.write("Manage patients and hospital activities.")
+
+    tabs = st.tabs([
+        "Patients",
+        "Patient Queue",
+        "Appointments",
+        "History",
+        "Departments",
+        "Record Categories",
+        "Hospital Navigation",
+        "Department Connections"
+    ])
+
+    # ----------------------------------------------
+    # PATIENTS
+    # ----------------------------------------------
+
+    with tabs[0]:
+
+        action = st.radio(
+            "Patient Operation",
+            [
+                "Register",
+                "Remove",
+                "Search",
+                "Update",
+                "View All"
+            ],
+            horizontal=True,
+            key="hospital_patients"
+        )
+
+        if action == "Register":
+            text_form(
+                "Register Patient",
+                ["Patient ID", "Patient Name"],
+                "patients",
+                "registerPatient"
+            )
+
+        elif action == "Remove":
+            one_input_action(
+                "Remove Patient",
+                "Patient ID",
+                "patients",
+                "removePatient"
+            )
+
+        elif action == "Search":
+            with st.form("search_patient"):
+                pid = st.text_input("Patient ID")
+                submit = st.form_submit_button("Search")
+
+                if submit and pid.strip():
+                    if read("patients", "searchPatient", pid):
+                        st.success("Patient found.")
+                    else:
+                        st.error("Patient not found.")
+
+        elif action == "Update":
+            text_form(
+                "Update Patient",
+                ["Patient ID", "New Details"],
+                "patients",
+                "updatePatientDetails"
+            )
+
+        elif action == "View All":
+            display_action(
+                "Display Patients",
+                "patients",
+                "displayAllPatients"
+            )
+
+        st.metric(
+            "Total Patients",
+            read("patients", "getPatientCount")
+        )
+
+    # ----------------------------------------------
+    # PATIENT QUEUE
+    # ----------------------------------------------
+
+    with tabs[1]:
+
+        action = st.radio(
+            "Queue Operation",
+            [
+                "Add",
+                "Call Next",
+                "View Next",
+                "Cancel Visit"
+            ],
+            horizontal=True,
+            key="hospital_queue"
+        )
+
+        if action == "Add":
+            one_input_action(
+                "Add Patient",
+                "Patient ID",
+                "patient_queue",
+                "addPatientToQueue"
+            )
+
+        elif action == "Call Next":
+            if st.button("Call Next Patient"):
+                show_result(
+                    modify("patient_queue", "callNextPatient")
+                )
+
+        elif action == "View Next":
+            if st.button("View Next Patient"):
+                show_result(
+                    read("patient_queue", "viewNextPatient")
+                )
+
+        elif action == "Cancel Visit":
+            one_input_action(
+                "Cancel Patient Visit",
+                "Patient ID",
+                "patient_queue",
+                "cancelPatientVisit"
+            )
+
+        st.metric(
+            "Waiting Patients",
+            read("patient_queue", "getWaitingCount")
+        )
+
+    # ----------------------------------------------
+    # APPOINTMENTS
+    # ----------------------------------------------
+
+    with tabs[2]:
+
+        action = st.radio(
+            "Appointment Operation",
+            [
+                "Schedule",
+                "Cancel",
+                "Reschedule",
+                "Find",
+                "Doctor Schedule",
+                "Count"
+            ],
+            horizontal=True,
+            key="hospital_appointments"
+        )
+
+        if action == "Schedule":
+            text_form(
+                "Schedule Appointment",
+                ["Patient ID", "Appointment Details"],
+                "appointments",
+                "scheduleAppointment"
+            )
+
+        elif action == "Cancel":
+            one_input_action(
+                "Cancel Appointment",
+                "Patient ID",
+                "appointments",
+                "cancelAppointment"
+            )
+
+        elif action == "Reschedule":
+            text_form(
+                "Reschedule Appointment",
+                ["Patient ID", "New Appointment Details"],
+                "appointments",
+                "rescheduleAppointment"
+            )
+
+        elif action == "Find":
+            with st.form("find_appointment"):
+                pid = st.text_input("Patient ID")
+                submit = st.form_submit_button("Find")
+
+                if submit and pid.strip():
+                    if read("appointments", "findAppointment", pid):
+                        st.success("Appointment found.")
+                    else:
+                        st.error("Appointment not found.")
+
+        elif action == "Doctor Schedule":
+            one_input_action(
+                "View Doctor Schedule",
+                "Doctor Name",
+                "appointments",
+                "displayDoctorSchedule"
+            )
+
+        elif action == "Count":
+            metric_action(
+                "Total Appointments",
+                "appointments",
+                "getAppointmentCount"
+            )
+
+    # ----------------------------------------------
+    # PATIENT HISTORY
+    # ----------------------------------------------
+
+    with tabs[3]:
+
+        text_form(
+            "Record Patient Action",
+            ["Action Description"],
+            "patient_history",
+            "recordPatientAction"
+        )
+
+        col1, col2 = st.columns(2)
+
+        with col1:
+            display_action(
+                "View Record History",
+                "patient_history",
+                "getRecordHistory"
+            )
+
+        with col2:
+            display_action(
+                "View Last Action",
+                "patient_history",
+                "viewLastRecordAction"
+            )
+
+        if st.button("Undo Last Record Action"):
+            show_result(
+                modify(
+                    "patient_history",
+                    "undoLastRecordAction"
+                )
+            )
+
+    # ----------------------------------------------
+    # DEPARTMENT HIERARCHY
+    # ----------------------------------------------
+
+    with tabs[4]:
+
+        action = st.radio(
+            "Department Operation",
+            [
+                "Add Department",
+                "Remove Department",
+                "Search",
+                "Display",
+                "Add Subdepartment",
+                "Find Level",
+                "Count",
+                "Display In Order"
+            ],
+            horizontal=True,
+            key="departments"
+        )
+
+        if action == "Add Department":
+            one_input_action(
+                "Add Department",
+                "Department Name",
+                "departments",
+                "addDepartment"
+            )
+
+        elif action == "Remove Department":
+            one_input_action(
+                "Remove Department",
+                "Department Name",
+                "departments",
+                "removeDepartment"
+            )
+
+        elif action == "Search":
+            with st.form("search_department"):
+                name = st.text_input("Department Name")
+                submit = st.form_submit_button("Search")
+
+                if submit and name.strip():
+                    if read("departments", "searchDepartment", name):
+                        st.success("Department found.")
+                    else:
+                        st.error("Department not found.")
+
+        elif action == "Display":
+            display_action(
+                "Display Department Hierarchy",
+                "departments",
+                "displayDepartmentHierarchy"
+            )
+
+        elif action == "Add Subdepartment":
+            two_input_action(
+                "Add Subdepartment",
+                "Parent Department",
+                "Subdepartment",
+                "departments",
+                "addSubDepartment"
+            )
+
+        elif action == "Find Level":
+            with st.form("department_level"):
+                name = st.text_input("Department Name")
+                submit = st.form_submit_button("Find Level")
+
+                if submit and name.strip():
+                    st.write(
+                        read("departments", "findDepartmentLevel", name)
+                    )
+
+        elif action == "Count":
+            metric_action(
+                "Department Count",
+                "departments",
+                "getDepartmentCount"
+            )
+
+        elif action == "Display In Order":
+            display_action(
+                "Display Departments In Order",
+                "departments",
+                "displayDepartmentsInOrder"
+            )
+
+    # ----------------------------------------------
+    # MEDICAL RECORD CATEGORIES
+    # ----------------------------------------------
+
+    with tabs[5]:
+
+        action = st.radio(
+            "Category Operation",
+            [
+                "Add Category",
+                "Add Subcategory",
+                "Search",
+                "Display"
+            ],
+            horizontal=True,
+            key="record_categories"
+        )
+
+        if action == "Add Category":
+            one_input_action(
+                "Add Record Category",
+                "Category Name",
+                "categories",
+                "addRecordCategory"
+            )
+
+        elif action == "Add Subcategory":
+            two_input_action(
+                "Add Subcategory",
+                "Parent Category",
+                "Subcategory",
+                "categories",
+                "addSubCategory"
+            )
+
+        elif action == "Search":
+            with st.form("search_category"):
+                name = st.text_input("Category Name")
+                submit = st.form_submit_button("Search")
+
+                if submit and name.strip():
+                    if read("categories", "searchRecordCategory", name):
+                        st.success("Category found.")
+                    else:
+                        st.error("Category not found.")
+
+        elif action == "Display":
+            display_action(
+                "Display Record Categories",
+                "categories",
+                "displayRecordCategories"
+            )
+
+    # ----------------------------------------------
+    # HOSPITAL NAVIGATION
+    # ----------------------------------------------
+
+    with tabs[6]:
+
+        action = st.radio(
+            "Navigation Operation",
+            [
+                "Add Location",
+                "Connect Locations",
+                "Remove Location",
+                "Connected Locations",
+                "Find Route",
+                "Shortest Route",
+                "Display Map"
+            ],
+            horizontal=True,
+            key="hospital_navigation"
+        )
+
+        if action == "Add Location":
+            one_input_action(
+                "Add Hospital Location",
+                "Location Name",
+                "hospital_navigation",
+                "addHospitalLocation"
+            )
+
+        elif action == "Connect Locations":
+            two_input_action(
+                "Connect Locations",
+                "First Location",
+                "Second Location",
+                "hospital_navigation",
+                "connectLocations"
+            )
+
+        elif action == "Remove Location":
+            one_input_action(
+                "Remove Location",
+                "Location Name",
+                "hospital_navigation",
+                "removeLocation"
+            )
+
+        elif action == "Connected Locations":
+            one_input_action(
+                "Find Connected Locations",
+                "Location Name",
+                "hospital_navigation",
+                "findConnectedLocations"
+            )
+
+        elif action in ["Find Route", "Shortest Route"]:
+            with st.form("hospital_route"):
+                start = st.text_input("Starting Location")
+                end = st.text_input("Destination")
+                submit = st.form_submit_button("Find Route")
+
+                if submit and start.strip() and end.strip():
+                    method = (
+                        "findHospitalRoute"
+                        if action == "Find Route"
+                        else "findShortestHospitalRoute"
+                    )
+
+                    st.text(
+                        read("hospital_navigation", method, start, end)
+                    )
+
+        elif action == "Display Map":
+            display_action(
+                "Display Hospital Map",
+                "hospital_navigation",
+                "displayHospitalMap"
+            )
+
+    # ----------------------------------------------
+    # DEPARTMENT CONNECTIONS
+    # ----------------------------------------------
+
+    with tabs[7]:
+
+        action = st.radio(
+            "Connection Operation",
+            [
+                "Connect Departments",
+                "Related Departments",
+                "Connection Count",
+                "Find Department Path",
+                "Check Connectivity"
+            ],
+            horizontal=True,
+            key="department_connections"
+        )
+
+        if action == "Connect Departments":
+            two_input_action(
+                "Connect Departments",
+                "First Department",
+                "Second Department",
+                "department_connections",
+                "connectDepartments"
+            )
+
+        elif action == "Related Departments":
+            one_input_action(
+                "Find Related Departments",
+                "Department Name",
+                "department_connections",
+                "findRelatedDepartments"
+            )
+
+        elif action == "Connection Count":
+            with st.form("connection_count"):
+                name = st.text_input("Department Name")
+                submit = st.form_submit_button("Get Count")
+
+                if submit and name.strip():
+                    st.metric(
+                        "Connections",
+                        read(
+                            "department_connections",
+                            "getDepartmentConnections",
+                            name
+                        )
+                    )
+
+        elif action == "Find Department Path":
+            with st.form("department_path"):
+                start = st.text_input("Starting Department")
+                end = st.text_input("Destination Department")
+                submit = st.form_submit_button("Find Path")
+
+                if submit and start.strip() and end.strip():
+                    st.text(
+                        read(
+                            "department_connections",
+                            "findDepartmentPath",
+                            start,
+                            end
+                        )
+                    )
+
+        elif action == "Check Connectivity":
+            if st.button("Check Connectivity"):
+                if read(
+                    "department_connections",
+                    "checkDepartmentConnectivity"
+                ):
+                    st.success("Departments are connected.")
+                else:
+                    st.warning("Departments are not fully connected.")
+
+
+# ==================================================
+# FOOTER
+# ==================================================
+
+st.markdown("---")
+st.caption("DSLib | Custom C++ Data Structures Library")

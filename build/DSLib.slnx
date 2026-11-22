@@ -12,6 +12,7 @@
 		<BuildDependency Project="domain_smoke_test.vcxproj"/>
 		<BuildDependency Project="dslib.vcxproj"/>
 		<BuildDependency Project="dslib_demo.vcxproj"/>
+		<BuildDependency Project="dslib_python.vcxproj"/>
 	</Project>
 	<Project Path="Continuous.vcxproj" Type="8bc9ceb8-8b4a-11d0-8d11-00a0c91bc942" Id="7914a1d1-7bda-3bc2-952a-552136a54a3c">
 		<BuildDependency Project="ZERO_CHECK.vcxproj"/>
@@ -65,6 +66,10 @@
 		<BuildDependency Project="ZERO_CHECK.vcxproj"/>
 	</Project>
 	<Project Path="dslib_demo.vcxproj" Type="8bc9ceb8-8b4a-11d0-8d11-00a0c91bc942" Id="3f7a31d1-a6e0-3687-8d01-a0d2c8491453">
+		<BuildDependency Project="ZERO_CHECK.vcxproj"/>
+		<BuildDependency Project="dslib.vcxproj"/>
+	</Project>
+	<Project Path="dslib_python.vcxproj" Type="8bc9ceb8-8b4a-11d0-8d11-00a0c91bc942" Id="4e56fd0e-132a-315e-8fdc-c6a2d7fcdd3a">
 		<BuildDependency Project="ZERO_CHECK.vcxproj"/>
 		<BuildDependency Project="dslib.vcxproj"/>
 	</Project>

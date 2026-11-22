@@ -1,0 +1,81 @@
+[
+    {
+        "object": "students",
+        "method": "registerStudent",
+        "args": [
+            "s001",
+            "riya"
+        ]
+    },
+    {
+        "object": "students",
+        "method": "registerStudent",
+        "args": [
+            "s002",
+            "neha"
+        ]
+    },
+    {
+        "object": "students",
+        "method": "updateStudentDetails",
+        "args": [
+            "s002",
+            "pranjal"
+        ]
+    },
+    {
+        "object": "students",
+        "method": "removeStudent",
+        "args": [
+            "s003"
+        ]
+    },
+    {
+        "object": "students",
+        "method": "removeStudent",
+        "args": [
+            "s001"
+        ]
+    },
+    {
+        "object": "students",
+        "method": "updateStudentDetails",
+        "args": [
+            "s002",
+            "abhishek"
+        ]
+    },
+    {
+        "object": "student_queue",
+        "method": "addStudentToQueue",
+        "args": [
+            "riya"
+        ]
+    },
+    {
+        "object": "student_queue",
+        "method": "addStudentToQueue",
+        "args": [
+            "vasu"
+        ]
+    },
+    {
+        "object": "student_queue",
+        "method": "addStudentToQueue",
+        "args": [
+            "pria"
+        ]
+    },
+    {
+        "object": "student_queue",
+        "method": "serveNextStudent",
+        "args": []
+    },
+    {
+        "object": "student_queue",
+        "method": "removeStudentFromQueue",
+        "args": [
+            "vasu"
+        ]
+    }
+]
